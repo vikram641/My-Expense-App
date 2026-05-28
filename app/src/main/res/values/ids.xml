@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="tvSetBudget" type="id" />
+    <item name="btnPrev" type="id" />
+    <item name="tvMonth" type="id" />
+    <item name="btnNext" type="id" />
+    <item name="cardOverall" type="id" />
+    <item name="tvOverall" type="id" />
+    <item name="tvPercent" type="id" />
+    <item name="progressOverall" type="id" />
+    <item name="tvSpent" type="id" />
+    <item name="rvBudgets" type="id" />
+</resources>

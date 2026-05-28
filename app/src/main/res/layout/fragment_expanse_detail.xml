@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0B132B">
+
+    <!-- Back -->
+    <ImageView
+        android:id="@+id/btnBack"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_back"
+        android:tint="@android:color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_margin="16dp"/>
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/tvTitle"
+        android:text="Expense Detail"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/btnBack"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Edit Icon -->
+    <ImageView
+        android:id="@+id/btnEdit"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_edit"
+        android:tint="@android:color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="16dp"/>
+
+    <!-- Main Card -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardMain"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="20dp"
+        app:cardBackgroundColor="#1C2541"
+        android:layout_margin="16dp"
+        app:layout_constraintTop_toBottomOf="@id/tvTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="20dp">
+
+            <!-- Icon BG -->
+            <View
+                android:id="@+id/iconBg"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:background="@drawable/bg_icon_circle"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <!-- Icon -->
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_food"
+                app:layout_constraintTop_toTopOf="@id/iconBg"
+                app:layout_constraintBottom_toBottomOf="@id/iconBg"
+                app:layout_constraintStart_toStartOf="@id/iconBg"
+                app:layout_constraintEnd_toEndOf="@id/iconBg"/>
+
+            <!-- Amount -->
+            <TextView
+                android:id="@+id/tvAmount"
+                android:text="-₹450"
+                android:textColor="#FF4D4D"
+                android:textSize="32sp"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/iconBg"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="12dp"/>
+
+            <!-- Title -->
+            <TextView
+                android:id="@+id/tvDesc"
+                android:text="Lunch at office"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/tvAmount"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="4dp"/>
+
+            <!-- Tag -->
+            <TextView
+                android:id="@+id/tvTag"
+                android:text="Food"
+                android:textColor="#8A7CFF"
+                android:background="@drawable/bg_tag"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="4dp"
+                android:textSize="12sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/tvDesc"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="8dp"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <!-- Details Card -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardDetails"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="20dp"
+        app:cardBackgroundColor="#1C2541"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintTop_toBottomOf="@id/cardMain"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="20dp">
+
+            <!-- Date -->
+            <TextView
+                android:id="@+id/tvDateLabel"
+                android:text="Date"
+                android:textColor="#9AA5C4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <TextView
+                android:text="April 1, 2025 · 1:30 PM"
+                android:textColor="@android:color/white"
+                app:layout_constraintTop_toTopOf="@id/tvDateLabel"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <!-- Category -->
+            <TextView
+                android:id="@+id/tvCategoryLabel"
+                android:text="Category"
+                android:textColor="#9AA5C4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/tvDateLabel"
+                android:layout_marginTop="12dp"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <TextView
+                android:text="🍔 Food"
+                android:textColor="@android:color/white"
+                app:layout_constraintTop_toTopOf="@id/tvCategoryLabel"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <!-- Currency -->
+            <TextView
+                android:id="@+id/tvCurrencyLabel"
+                android:text="Currency"
+                android:textColor="#9AA5C4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/tvCategoryLabel"
+                android:layout_marginTop="12dp"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <TextView
+                android:text="INR"
+                android:textColor="@android:color/white"
+                app:layout_constraintTop_toTopOf="@id/tvCurrencyLabel"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <!-- Created -->
+            <TextView
+                android:id="@+id/tvCreatedLabel"
+                android:text="Created"
+                android:textColor="#9AA5C4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/tvCurrencyLabel"
+                android:layout_marginTop="12dp"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <TextView
+                android:text="Apr 1, 2025"
+                android:textColor="@android:color/white"
+                app:layout_constraintTop_toTopOf="@id/tvCreatedLabel"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <!-- Edit Button -->
+    <Button
+        android:id="@+id/btnEditAction"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:text="Edit"
+        android:textColor="#7B61FF"
+        android:background="@drawable/bg_button_outline"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btnDelete"/>
+
+    <!-- Delete Button -->
+    <Button
+        android:id="@+id/btnDelete"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:text="Delete"
+        android:textColor="#FF3B30"
+        android:background="@drawable/bg_button_filled"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/btnEditAction"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

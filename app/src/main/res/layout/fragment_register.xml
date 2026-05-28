@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="vm"
+            type="com.example.AuthViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bg_primary">
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            app:cardCornerRadius="24dp"
+            app:cardBackgroundColor="@color/bg_card"
+            app:strokeColor="@color/card_stroke"
+            app:strokeWidth="1dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fillViewport="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <!-- Heading -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Create Account"
+                        android:textColor="@color/text_primary"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="8dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Start tracking your expenses"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="13sp"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="4dp"/>
+
+                    <!-- Full Name -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Full Name"
+                        android:textColor="@color/text_secondary"
+                        android:layout_marginTop="20dp"/>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:boxCornerRadiusTopStart="12dp"
+                        app:boxCornerRadiusTopEnd="12dp"
+                        app:boxCornerRadiusBottomStart="12dp"
+                        app:boxCornerRadiusBottomEnd="12dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/userName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Enter your name"
+                            android:text="@={vm.username}"
+                            android:textColor="@color/text_primary"
+                            android:textColorHint="@color/text_hint"/>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Email -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Email"
+                        android:textColor="@color/text_secondary"
+                        android:layout_marginTop="16dp"/>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:boxCornerRadiusTopStart="12dp"
+                        app:boxCornerRadiusTopEnd="12dp"
+                        app:boxCornerRadiusBottomStart="12dp"
+                        app:boxCornerRadiusBottomEnd="12dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/userEmail"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="xyz@example.com"
+                            android:text="@={vm.userEmail}"
+                            android:textColor="@color/text_primary"
+                            android:textColorHint="@color/text_hint"
+                            android:inputType="textEmailAddress"/>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Password -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Password"
+                        android:textColor="@color/text_secondary"
+                        android:layout_marginTop="16dp"/>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:endIconMode="password_toggle"
+                        app:boxCornerRadiusTopStart="12dp"
+                        app:boxCornerRadiusTopEnd="12dp"
+                        app:boxCornerRadiusBottomStart="12dp"
+                        app:boxCornerRadiusBottomEnd="12dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/userPassword"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="••••••••"
+                            android:text="@={vm.userPassword}"
+                            android:textColor="@color/text_primary"
+                            android:textColorHint="@color/text_hint"
+                            android:inputType="textPassword"/>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Currency -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Currency"
+                        android:textColor="@color/text_secondary"
+                        android:layout_marginTop="16dp"/>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:endIconMode="dropdown_menu"
+                        app:boxBackgroundMode="filled"
+                        app:boxBackgroundColor="@color/input_bg"
+                        app:boxCornerRadiusTopStart="12dp"
+                        app:boxCornerRadiusTopEnd="12dp"
+                        app:boxCornerRadiusBottomStart="12dp"
+                        app:boxCornerRadiusBottomEnd="12dp">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/etCurrency"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="INR — Indian Rupee"
+                            android:textColor="@color/text_primary"
+                            android:textColorHint="@color/text_hint"
+                            android:focusable="false"/>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Error -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@={vm.validateError}"
+                        android:textColor="@color/text_error"
+                        android:layout_marginTop="8dp"/>
+
+                    <!-- Button -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnReg"
+                        android:layout_width="match_parent"
+                        android:layout_height="52dp"
+                        android:text="Create Account"
+                        android:textAllCaps="false"
+                        android:textSize="15sp"
+                        android:textColor="@color/white"
+                        android:layout_marginTop="20dp"
+                        app:cornerRadius="26dp"
+                        android:backgroundTint="@color/text_accent"/>
+
+                </LinearLayout>
+
+            </ScrollView>
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

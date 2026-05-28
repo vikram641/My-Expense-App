@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_primary"
+    android:padding="16dp">
+
+    <!-- Title -->
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvTitle"
+        android:text="Settings"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="@color/text_primary"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <!-- Profile Card -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/profileCard"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@color/bg_card"
+        app:layout_constraintTop_toBottomOf="@id/tvTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/bg_card"
+            android:padding="16dp">
+
+            <!-- Avatar -->
+            <TextView
+                android:id="@+id/tvAvatar"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:background="@drawable/bg_circle"
+                android:gravity="center"
+                android:text="VS"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <!-- Name -->
+            <TextView
+                android:id="@+id/tvName"
+                android:layout_width="0dp"
+                android:layout_marginLeft="10dp"
+                android:layout_height="wrap_content"
+                android:text="Vikram Singh"
+                android:textColor="@color/text_primary"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@id/imgArrow"
+                app:layout_constraintStart_toEndOf="@+id/tvAvatar"
+                app:layout_constraintTop_toTopOf="@id/tvAvatar" />
+
+            <!-- Email -->
+            <TextView
+                android:id="@+id/tvEmail"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="vikram@example.com"
+                android:textColor="@color/text_hint"
+                android:textSize="13sp"
+                android:layout_marginTop="2dp"
+                app:layout_constraintStart_toStartOf="@id/tvName"
+                app:layout_constraintEnd_toEndOf="@id/tvName"
+                app:layout_constraintTop_toBottomOf="@id/tvName"/>
+
+            <!-- Arrow -->
+            <ImageView
+                android:id="@+id/imgArrow"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/outline_arrow_forward_ios_24"
+                android:tint="@color/text_hint"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tvAvatar"
+                app:layout_constraintBottom_toBottomOf="@id/tvAvatar"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Settings Card -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/settingsCard"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@color/bg_card"
+        app:layout_constraintTop_toBottomOf="@id/profileCard"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/bg_card"
+            android:padding="16dp">
+
+            <!-- Dark Theme -->
+            <TextView
+                android:id="@+id/iconTheme"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_circle"
+                android:gravity="center"
+                android:text="🌙"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <TextView
+                android:id="@+id/tvTheme"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Dark Theme"
+                android:textColor="@color/text_primary"
+                android:layout_marginStart="12dp"
+                app:layout_constraintStart_toEndOf="@id/iconTheme"
+                app:layout_constraintEnd_toStartOf="@id/switchTheme"
+                app:layout_constraintTop_toTopOf="@id/iconTheme"/>
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switchTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/iconTheme"/>
+
+            <!-- Budget Alerts -->
+            <TextView
+                android:id="@+id/iconAlert"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_circle"
+                android:gravity="center"
+                android:text="🔔"
+                android:layout_marginTop="20dp"
+                app:layout_constraintTop_toBottomOf="@id/iconTheme"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <TextView
+                android:id="@+id/tvAlert"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Budget Alerts"
+                android:textColor="@color/text_primary"
+                android:layout_marginStart="12dp"
+                app:layout_constraintStart_toEndOf="@id/iconAlert"
+                app:layout_constraintEnd_toStartOf="@id/switchAlert"
+                app:layout_constraintTop_toTopOf="@id/iconAlert"/>
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switchAlert"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/iconAlert"/>
+
+            <!-- Currency -->
+            <TextView
+                android:id="@+id/iconCurrency"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_circle"
+                android:gravity="center"
+                android:text="💱"
+                android:layout_marginTop="20dp"
+                app:layout_constraintTop_toBottomOf="@id/iconAlert"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <TextView
+                android:id="@+id/tvCurrency"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Currency"
+                android:textColor="@color/text_primary"
+                android:layout_marginStart="12dp"
+                app:layout_constraintStart_toEndOf="@id/iconCurrency"
+                app:layout_constraintEnd_toStartOf="@id/tvCurrencyValue"
+                app:layout_constraintTop_toTopOf="@id/iconCurrency"/>
+
+            <TextView
+                android:id="@+id/tvCurrencyValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="INR"
+                android:textColor="@color/text_hint"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/iconCurrency"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

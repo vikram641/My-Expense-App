@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:padding="15dp"
+
+    android:background="@drawable/bg_card">
+
+
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Set Budget"
+        android:textColor="@color/text_primary"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvCategories"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:nestedScrollingEnabled="false"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvTitle"
+        tools:itemCount="5"
+        tools:listitem="@layout/item_category" />
+    <!-- Month -->
+    <TextView
+        android:id="@+id/etMonth"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="12dp"
+        android:gravity="center"
+        android:padding="12dp"
+        android:text="Apri 2026"
+        android:textColor="@color/accent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rvCategories" />
+
+    <!-- Amount -->
+    <EditText
+        android:id="@+id/etAmount"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:hint="Limit Amount"
+        android:textSize="10dp"
+        android:inputType="number"
+        android:textColor="@color/text_primary"
+        android:textColorHint="@color/text_hint"
+        android:padding="12dp"
+        app:layout_constraintTop_toBottomOf="@id/etMonth"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="12dp"/>
+
+
+
+    <!-- Currency -->
+    <EditText
+        android:id="@+id/etCurrency"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:hint="Currency (INR)"
+        android:textColor="@android:color/white"
+        android:background="@drawable/bg_card"
+        android:padding="12dp"
+
+        android:textColorHint="#7C7BFF"
+        app:layout_constraintTop_toBottomOf="@id/etAmount"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="12dp"/>
+
+    <!-- Button -->
+
+    <Button
+        android:id="@+id/btnSave"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="4dp"
+        android:backgroundTint="#7C7BFF"
+        android:text="Save Budget"
+        android:textColor="@android:color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etCurrency" />
+
+    <Button
+        android:id="@+id/btnCancel"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="24dp"
+        android:backgroundTint="#7C7BFF"
+        android:text="Cancel"
+        android:textColor="@android:color/white"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/etCurrency" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,58 @@
+<resources>
+
+    <!-- TEXT STYLES -->
+    <style name="TextTitle">
+        <item name="android:textColor">@color/text_white</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextBig">
+        <item name="android:textColor">@color/text_white</item>
+        <item name="android:textSize">32sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextSub">
+        <item name="android:textColor">@color/text_sub</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <!-- PROGRESS BAR (FIXED) -->
+    <style name="CustomProgress" parent="Widget.AppCompat.ProgressBar.Horizontal">
+        <item name="android:progressTint">@color/purple</item>
+        <item name="trackColor">#2E3A4A</item>
+    </style>
+
+    <!-- TEXT APPEARANCE -->
+    <style name="TextAppearance.BudgetTracker" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:textColor">@color/text_white</item>
+    </style>
+
+    <!-- FIXED WIDGET STYLE -->
+    <style name="Widget.BudgetTracker" parent="Widget.Material3.Button" />
+
+    <!-- FIXED BADGE -->
+    <style name="Widget.BudgetTracker.Badge" parent="android:Widget.TextView">
+        <item name="android:background">@drawable/bg_avatar_circle</item>
+        <item name="android:textColor">@android:color/white</item>
+        <!-- Apply font everywhere -->
+        <item name="android:fontFamily">@font/poppins</item>
+        <item name="fontFamily">@font/poppins</item>
+    </style>
+
+
+    <style name="FilterChipSelected">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">20dp</item>
+    </style>
+    <style name="BottomSheetAnim" parent="Theme.Material3.Light.BottomSheetDialog">
+        <item name="android:windowAnimationStyle">@style/DialogAnim</item>
+    </style>
+
+    <style name="DialogAnim">
+        <item name="android:windowEnterAnimation">@anim/slide_up</item>
+        <item name="android:windowExitAnimation">@anim/slide_down</item>
+    </style>
+
+</resources>

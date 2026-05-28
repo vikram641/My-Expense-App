@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_primary">
+
+    <!-- APP BAR -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bg_primary"
+        app:elevation="0dp">
+
+        <!-- FIXED TITLE — never scrolls -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_scrollFlags="noScroll">
+
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="16dp"
+                android:text="Expenses"
+                android:textColor="@color/text_primary"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@id/ivTopSearch"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <ImageView
+                android:id="@+id/ivTopSearch"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="20dp"
+                android:src="@android:drawable/ic_menu_search"
+                android:tint="@color/text_primary"
+                app:layout_constraintBottom_toBottomOf="@id/tvTitle"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tvTitle"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- SCROLLABLE FILTER — scrolls up and snaps back -->
+        <LinearLayout
+            android:id="@+id/filterContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+           >
+
+            <!-- CHIP GROUP -->
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="8dp"
+                app:chipSpacingHorizontal="8dp"
+                app:chipSpacingVertical="8dp"
+                app:singleSelection="true">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipAll"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="All"
+                    android:textColor="@color/text_primary"
+                    app:chipBackgroundColor="@color/bg_card"/>
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipFood"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Food"
+                    android:textColor="@color/text_primary"
+                    app:chipBackgroundColor="@color/bg_card"/>
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipTransport"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Transport"
+                    android:textColor="@color/text_primary"
+                    app:chipBackgroundColor="@color/bg_card"/>
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipBills"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Bills"
+                    android:textColor="@color/text_primary"
+                    app:chipBackgroundColor="@color/bg_card"/>
+
+            </com.google.android.material.chip.ChipGroup>
+
+            <!-- SEARCH BAR -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/searchLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"
+                app:boxBackgroundColor="@color/bg_card"
+                app:boxBackgroundMode="filled"
+                app:boxStrokeWidth="0dp"
+                app:endIconMode="clear_text"
+                app:hintEnabled="false"
+                app:startIconDrawable="@android:drawable/ic_menu_search"
+                app:startIconTint="@color/text_hint">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/searchEt"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:background="@drawable/bg_card"
+                    android:hint="Search expenses..."
+                    android:paddingStart="4dp"
+                    android:paddingEnd="8dp"
+                    android:paddingVertical="12dp"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/text_hint"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- RECYCLERVIEW -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvExpenses"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:nestedScrollingEnabled="true"
+        android:clipToPadding="false"
+        android:paddingBottom="90dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:itemCount="20"
+        tools:listitem="@layout/item_expenses"/>
+
+<!--    &lt;!&ndash; FAB &ndash;&gt;-->
+<!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--        android:id="@+id/fabAdd"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="bottom|end"-->
+<!--        android:layout_margin="20dp"-->
+<!--        android:src="@android:drawable/ic_input_add"-->
+<!--        app:backgroundTint="@color/text_accent"/>-->
+
+    <!-- LOADER -->
+    <FrameLayout
+        android:id="@+id/loaderLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bg_primary"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottieProgress"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            android:layout_gravity="center"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/expense"
+            app:lottie_speed="1.5"/>
+
+    </FrameLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

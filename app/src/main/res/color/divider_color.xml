@@ -1,0 +1,9 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Dark Mode -->
+    <item android:color="#2A2A2A"/>
+
+    <!-- Light Mode -->
+    <item android:color="#E0E0E0"/>
+
+</selector>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+
+    <debug-overrides>
+        <trust-anchors>
+            <certificates src="system"/>
+            <certificates src="user"/>
+        </trust-anchors>
+    </debug-overrides>
+    <domain-config cleartextTrafficPermitted="true">
+        <!--        <domain includeSubdomains="true">mocky.io</domain>-->
+        <!--        <domain includeSubdomains="true">gomechanic.in</domain>-->
+        <!--        <domain includeSubdomains="true">ai.gomechanic.app</domain>-->
+        <!--        <domain includeSubdomains="true">gomechanictest-env-2.eba-zptjfpqj.us-east-1.elasticbeanstalk.com</domain>-->
+<!--        <domain includeSubdomains="true">notes-6qs3.onrender.com</domain>-->
+
+                <domain includeSubdomains="true">172.16.19.112</domain>
+
+        <!--        <domain includeSubdomains="true">172.16.19.183</domain>-->
+        <!--        <domain includeSubdomains="true">192.168.1.4</domain>-->
+    </domain-config>
+
+</network-security-config>

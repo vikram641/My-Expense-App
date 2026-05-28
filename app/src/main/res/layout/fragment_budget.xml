@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_primary">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp">
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Budget"
+            android:textColor="@color/text_primary"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tvSetBudget"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <!-- Set Budget -->
+        <TextView
+            android:id="@+id/tvSetBudget"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="+ Set Budget"
+            android:textColor="@color/text_accent"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBaseline_toBaselineOf="@id/tvTitle"/>
+
+        <!-- Month Navigation -->
+        <TextView
+            android:id="@+id/btnPrev"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:gravity="center"
+            android:text="‹"
+            android:textColor="@color/text_primary"
+            android:textSize="18sp"
+            app:layout_constraintTop_toBottomOf="@id/tvTitle"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="16dp"/>
+
+        <TextView
+            android:id="@+id/tvMonth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="April 2025"
+            android:textColor="@color/text_primary"
+            android:textSize="18sp"
+            app:layout_constraintTop_toTopOf="@id/btnPrev"
+            app:layout_constraintBottom_toBottomOf="@id/btnPrev"
+            app:layout_constraintStart_toEndOf="@id/btnPrev"
+            app:layout_constraintEnd_toStartOf="@id/btnNext"
+            app:layout_constraintHorizontal_bias="0.5"/>
+
+        <TextView
+            android:id="@+id/btnNext"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:gravity="center"
+            android:text="›"
+            android:textColor="@color/text_primary"
+            android:textSize="18sp"
+            app:layout_constraintTop_toTopOf="@id/btnPrev"
+            app:layout_constraintBottom_toBottomOf="@id/btnPrev"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <!-- Overall Budget Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardOverall"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_card"
+            app:layout_constraintTop_toBottomOf="@id/btnPrev"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="16dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:background="@color/bg_card"
+                android:layout_height="wrap_content"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/tvOverall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Overall Budget"
+                    android:textColor="@color/text_hint"
+                    android:textSize="14sp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <TextView
+                    android:id="@+id/tvPercent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="73% used"
+                    android:textColor="#FFA500"
+                    android:textSize="14sp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <ProgressBar
+                    android:id="@+id/progressOverall"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="8dp"
+                    android:progress="73"
+                    android:progressTint="#FFA500"
+                    app:layout_constraintTop_toBottomOf="@id/tvOverall"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginTop="8dp"/>
+
+                <TextView
+                    android:id="@+id/tvSpent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="₹18,450 spent of ₹25,000"
+                    android:textColor="@color/text_hint"
+                    android:textSize="12sp"
+                    app:layout_constraintTop_toBottomOf="@id/progressOverall"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginTop="8dp"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- RecyclerView -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvBudgets"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            tools:itemCount="5"
+            tools:listitem="@layout/item_budget"
+            app:layout_constraintTop_toBottomOf="@id/cardOverall"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="16dp"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Blur Layer -->
+    <eightbitlab.com.blurview.BlurView
+        android:id="@+id/blurView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
+
+</FrameLayout>

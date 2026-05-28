@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="bg_screen">#0B132B</color>
+    <color name="card_bg">#19224E</color>
+
+    <color name="accent">#7B61FF</color>
+    <color name="tag_bg">#2A2555</color>
+    <color name="icon_bg">#2E2A5E</color>
+    <color name="red">#FF4D4D</color>
+    <color name="delete_bg">#F5D6D6</color>
+    <color name="gray">#888888</color>
+    <color name="primary">#6200EE</color>
+
+    <color name="bg_surface">#FFFFFF</color>
+    <color name="border">#E5E9F5</color>
+    <color name="bottom_nav_bg">#FFFFFF</color>
+
+    <color name="expense_red">#E53935</color>
+
+
+
+    <!-- Backgrounds -->
+    <color name="bg_primary">#F7F9FF</color>
+    <color name="bg_card">#FFFFFF</color>
+    <color name="card_stroke">#E5E9F5</color>
+
+    <!-- Text -->
+    <color name="text_primary">#1a1f36</color>
+    <color name="text_secondary">#6B7280</color>
+    <color name="text_hint">#9CA3AF</color>
+    <color name="text_accent">#6C7BFF</color>
+
+    <color name="input_bg">#F0F4FF</color>
+    <color name="text_error">#DC2626</color>
+
+    <color name="text_warning">#E53935</color>
+
+    <color name="progress_bg">#E5E9F5</color>
+    <color name="progress_start">#6A5AE0</color>
+    <color name="progress_end">#9C7BFF</color>
+
+
+
+
+    <color name="bg_dark">#0B1A2B</color>
+
+
+
+    <color name="text_white">#FFFFFF</color>
+    <color name="text_sub">#A0A4B8</color>
+
+    <color name="purple">#7B6EF6</color>
+    <color name="green">#00E676</color>
+    <!-- Background colors -->
+
+
+    <color name="bg_card_inner">#FF2E2E4A</color>
+
+    <!-- Text colors -->
+
+    <color name="text_green">#FF4CAF82</color>
+    <color name="text_purple_light">#FFCBC3FF</color>
+
+    <!-- Accent -->
+    <color name="accent_purple">#FF7C6FDD</color>
+    <color name="accent_purple_fab">#FF6B5FD0</color>
+
+
+    <color name="text_light">#AAB4C3</color>
+
+    <!-- Progress bar -->
+    <color name="progress_bar_fill">#FF7C6FDD</color>
+    <color name="progress_bar_bg">#FF3D3D5C</color>
+
+    <!-- Near limit badge -->
+    <color name="badge_warning_bg">#33F59E0B</color>
+    <color name="badge_warning_text">#FFF59E0B</color>
+    <color name="badge_warning_border">#80F59E0B</color>
+
+    <!-- Donut chart categories -->
+    <color name="category_food">#FF7C6FDD</color>
+    <color name="category_transport">#FF4CAF82</color>
+    <color name="category_bills">#FFF5A623</color>
+    <color name="category_other">#FFE74C3C</color>
+
+    <!-- Bottom nav -->
+    <color name="nav_active">#FFFFFFFF</color>
+    <color name="nav_inactive">#FF7070A0</color>
+    <color name="nav_bg">#FF1A1A2E</color>
+
+    <!-- Avatar -->
+    <color name="avatar_bg">#FF7C6FDD</color>
+    <color name="avatar_text">#FFFFFFFF</color>
+
+    <!-- Divider / stroke -->
+    <color name="stroke_subtle">#33FFFFFF</color>
+</resources>

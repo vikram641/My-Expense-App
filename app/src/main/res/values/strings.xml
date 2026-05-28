@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Budget Tracker</string>
+
+    <!-- Home screen -->
+    <string name="greeting">Good morning, %1$s</string>
+    <string name="greeting_wave">👋</string>
+
+    <!-- Spend summary card -->
+    <string name="label_total_spent_this_month">TOTAL SPENT THIS MONTH</string>
+    <string name="label_this_week">This Week</string>
+    <string name="label_remaining">Remaining </string>
+    <string name="label_budget_progress">%1$d%% of ₹%2$s budget</string>
+    <string name="badge_near_limit">⚠ Near limit</string>
+    <string name="badge_on_track">✓ On track</string>
+    <string name="badge_over_budget">✕ Over budget</string>
+
+    <!-- Titles -->
+    <string name="title_expenses">Expenses</string>
+
+    <!-- Categories -->
+    <string name="category_food">Food</string>
+    <string name="category_transport">Transport</string>
+    <string name="category_bills">Bills</string>
+    <string name="category_other">Other</string>
+
+    <!-- Currency symbol -->
+    <string name="currency_symbol">₹</string>
+
+    <!-- Bottom navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_expenses">Expenses</string>
+    <string name="nav_analytics">Analytics</string>
+    <string name="nav_budget">Budget</string>
+    <string name="nav_settings">Settings</string>
+
+
+    <!-- FIX -->
+    <string name="hello_blank_fragment">Hello Fragment</string>
+
+    <!-- FAB -->
+    <string name="fab_add_expense">Add expense</string>
+
+    <!-- Content descriptions (accessibility) -->
+    <string name="cd_avatar">User avatar</string>
+    <string name="cd_add_expense">Add new expense</string>
+    <string name="cd_spending_chart">Spending breakdown chart</string>
+    <string name="filter_all">All</string>
+    <string name="filter_food">Food</string>
+    <string name="filter_transport">Transport</string>
+    <string name="filter_bills">Bills</string>
+    <string name="hint_search_expenses">Search Expenses</string>
+    <string name="section_today">TODAY</string>
+    <string name="section_yesterday">YESTERDAY</string>
+
+</resources>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginTop="10dp"
+    android:padding="14dp"
+    android:background="@drawable/bg_card">
+
+    <!-- Logo -->
+    <ImageView
+        android:id="@+id/imgLogo"
+        android:layout_width="52dp"
+        android:layout_height="52dp"
+        android:background="@drawable/bg_circle"
+        android:padding="10dp"
+        android:src="@drawable/ic_food"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/tvNote"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Lunch Office"
+        android:textColor="@color/text_primary"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:layout_marginStart="12dp"
+        app:layout_constraintStart_toEndOf="@id/imgLogo"
+        app:layout_constraintEnd_toStartOf="@id/amount"
+        app:layout_constraintTop_toTopOf="@id/imgLogo"
+        tools:text="Rapido Ride Long Text Example"/>
+
+    <!-- Date -->
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Food • 1:30 PM"
+        android:textColor="@color/text_hint"
+        android:textSize="13sp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:layout_marginTop="4dp"
+        app:layout_constraintStart_toStartOf="@id/tvNote"
+        app:layout_constraintEnd_toEndOf="@id/tvNote"
+        app:layout_constraintTop_toBottomOf="@id/tvNote"
+        tools:text="Transport • 1 Apr"/>
+
+    <!-- Amount -->
+    <TextView
+        android:id="@+id/amount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="-₹450"
+        android:textColor="@color/expense_red"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/imgLogo"
+        app:layout_constraintBottom_toBottomOf="@id/imgLogo"
+        tools:text="-₹2550"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

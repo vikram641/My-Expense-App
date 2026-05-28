@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="72dp"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true">
+
+    <!-- Category Icon Container -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cvIcon"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        app:cardCornerRadius="14dp"
+        app:cardElevation="0dp"
+        app:cardBackgroundColor="@color/icon_bg"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <ImageView
+            android:id="@+id/ivCategoryIcon"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_food"
+            android:contentDescription="@null"/>
+
+    </androidx.cardview.widget.CardView>
+
+    <!-- Expense Name -->
+    <TextView
+        android:id="@+id/tvExpenseName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="14dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="2dp"
+        android:text="Lunch - Office"
+        android:textColor="@color/text_primary"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:maxLines="1"
+        android:ellipsize="end"
+        app:layout_constraintStart_toEndOf="@id/cvIcon"
+        app:layout_constraintEnd_toStartOf="@id/tvAmount"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/tvCategoryTime"
+        app:layout_constraintVertical_chainStyle="packed"/>
+
+    <!-- Category · Time -->
+    <TextView
+        android:id="@+id/tvCategoryTime"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="14dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="2dp"
+        android:text="Food · 1:30 PM"
+        android:textColor="@color/text_secondary"
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@id/cvIcon"
+        app:layout_constraintEnd_toStartOf="@id/tvAmount"
+        app:layout_constraintTop_toBottomOf="@id/tvExpenseName"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <!-- Amount -->
+    <TextView
+        android:id="@+id/tvAmount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="-₹450"
+        android:textColor="@color/red"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
