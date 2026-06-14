@@ -70,6 +70,7 @@
 
             <!-- Icon -->
             <ImageView
+                android:id="@+id/imgExpenseIcon"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/ic_food"
@@ -154,6 +155,7 @@
                 app:layout_constraintStart_toStartOf="parent"/>
 
             <TextView
+                android:id="@+id/tvDate"
                 android:text="April 1, 2025 · 1:30 PM"
                 android:textColor="@android:color/white"
                 app:layout_constraintTop_toTopOf="@id/tvDateLabel"
@@ -173,6 +175,7 @@
                 app:layout_constraintStart_toStartOf="parent"/>
 
             <TextView
+                android:id="@+id/tvCategory"
                 android:text="🍔 Food"
                 android:textColor="@android:color/white"
                 app:layout_constraintTop_toTopOf="@id/tvCategoryLabel"
@@ -192,6 +195,7 @@
                 app:layout_constraintStart_toStartOf="parent"/>
 
             <TextView
+                android:id="@+id/tvCurrency"
                 android:text="INR"
                 android:textColor="@android:color/white"
                 app:layout_constraintTop_toTopOf="@id/tvCurrencyLabel"
@@ -211,6 +215,7 @@
                 app:layout_constraintStart_toStartOf="parent"/>
 
             <TextView
+                android:id="@+id/tvCreatedAt"
                 android:text="Apr 1, 2025"
                 android:textColor="@android:color/white"
                 app:layout_constraintTop_toTopOf="@id/tvCreatedLabel"

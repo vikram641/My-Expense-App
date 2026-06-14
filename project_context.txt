@@ -1,0 +1,334 @@
+.
+|-- app
+|   |-- proguard-rules.pro
+|   |-- src
+|   |   |-- androidTest
+|   |   |   |-- java
+|   |   |   |   |-- com
+|   |   |   |   |   |-- example
+|   |   |   |   |   |   |-- expense
+|   |   |   |   |   |   |   |-- ExampleInstrumentedTest.kt
+|   |   |-- main
+|   |   |   |-- AndroidManifest.xml
+|   |   |   |-- java
+|   |   |   |   |-- com
+|   |   |   |   |   |-- example
+|   |   |   |   |   |   |-- expense
+|   |   |   |   |   |   |   |-- activities
+|   |   |   |   |   |   |   |   |-- ApiBaseUrlActivity.kt
+|   |   |   |   |   |   |   |-- core
+|   |   |   |   |   |   |   |   |-- base
+|   |   |   |   |   |   |   |   |   |-- BaseAdapter.kt
+|   |   |   |   |   |   |   |   |   |-- BaseDialogFragment.kt
+|   |   |   |   |   |   |   |   |   |-- BaseFragment.kt
+|   |   |   |   |   |   |   |   |   |-- BaseRecyclerAdapter.kt
+|   |   |   |   |   |   |   |   |-- NavEvent.kt
+|   |   |   |   |   |   |   |   |-- network
+|   |   |   |   |   |   |   |   |   |-- AuthInterceptor.kt
+|   |   |   |   |   |   |   |   |   |-- NetworkMonitor.kt
+|   |   |   |   |   |   |   |   |-- ui
+|   |   |   |   |   |   |   |   |   |-- LiquidAvatarView.kt
+|   |   |   |   |   |   |   |   |-- UiState.kt
+|   |   |   |   |   |   |   |   |-- util
+|   |   |   |   |   |   |   |   |   |-- AppENUM.kt
+|   |   |   |   |   |   |   |   |   |-- AvatarManager.kt
+|   |   |   |   |   |   |   |   |   |-- CatDiffCallback.kt
+|   |   |   |   |   |   |   |   |   |-- CurrencyConstants.kt
+|   |   |   |   |   |   |   |   |   |-- SessionCacheManager.kt
+|   |   |   |   |   |   |   |   |   |-- TokenManager.kt
+|   |   |   |   |   |   |   |   |   |-- Utils.kt
+|   |   |   |   |   |   |   |-- data
+|   |   |   |   |   |   |   |   |-- api
+|   |   |   |   |   |   |   |   |   |-- ApiInterface.kt
+|   |   |   |   |   |   |   |   |   |-- BudgetInterface.kt
+|   |   |   |   |   |   |   |   |   |-- ExpenseInterface.kt
+|   |   |   |   |   |   |   |   |   |-- HomeApiInterface.kt
+|   |   |   |   |   |   |   |   |-- local
+|   |   |   |   |   |   |   |   |   |-- AddExpenseResult.kt
+|   |   |   |   |   |   |   |   |   |-- BudgetDao.kt
+|   |   |   |   |   |   |   |   |   |-- BudgetEntity.kt
+|   |   |   |   |   |   |   |   |   |-- BudgetMappers.kt
+|   |   |   |   |   |   |   |   |   |-- CategoryDao.kt
+|   |   |   |   |   |   |   |   |   |-- CategoryEntity.kt
+|   |   |   |   |   |   |   |   |   |-- CategoryMappers.kt
+|   |   |   |   |   |   |   |   |   |-- ExpenseDao.kt
+|   |   |   |   |   |   |   |   |   |-- ExpenseDatabase.kt
+|   |   |   |   |   |   |   |   |   |-- ExpenseEntity.kt
+|   |   |   |   |   |   |   |   |   |-- ExpenseMappers.kt
+|   |   |   |   |   |   |   |   |   |-- PendingBudgetDao.kt
+|   |   |   |   |   |   |   |   |   |-- PendingBudgetEntity.kt
+|   |   |   |   |   |   |   |   |   |-- PendingExpenseDao.kt
+|   |   |   |   |   |   |   |   |   |-- PendingExpenseEntity.kt
+|   |   |   |   |   |   |   |   |   |-- PendingExpenseMappers.kt
+|   |   |   |   |   |   |   |   |-- model
+|   |   |   |   |   |   |   |   |   |-- AddExpenseRequest.kt
+|   |   |   |   |   |   |   |   |   |-- AddExpenseResponse.kt
+|   |   |   |   |   |   |   |   |   |-- ApiResponse.kt
+|   |   |   |   |   |   |   |   |   |-- BudgetData.kt
+|   |   |   |   |   |   |   |   |   |-- BulkSyncModels.kt
+|   |   |   |   |   |   |   |   |   |-- ByCategory.kt
+|   |   |   |   |   |   |   |   |   |-- ByMonth.kt
+|   |   |   |   |   |   |   |   |   |-- CatDataResponse.kt
+|   |   |   |   |   |   |   |   |   |-- Category.kt
+|   |   |   |   |   |   |   |   |   |-- CategoryX.kt
+|   |   |   |   |   |   |   |   |   |-- ChangePasswordRequest.kt
+|   |   |   |   |   |   |   |   |   |-- Data.kt
+|   |   |   |   |   |   |   |   |   |-- DeleteResponse.kt
+|   |   |   |   |   |   |   |   |   |-- Expense.kt
+|   |   |   |   |   |   |   |   |   |-- ExpenseData.kt
+|   |   |   |   |   |   |   |   |   |-- ExpenseQuery.kt
+|   |   |   |   |   |   |   |   |   |-- ExpensesResponse.kt
+|   |   |   |   |   |   |   |   |   |-- ExpenseSummaryData.kt
+|   |   |   |   |   |   |   |   |   |-- ExpenseSummaryResponse.kt
+|   |   |   |   |   |   |   |   |   |-- ExpenseWeeklySummaryResponse.kt
+|   |   |   |   |   |   |   |   |   |-- ExpenseX.kt
+|   |   |   |   |   |   |   |   |   |-- LoginUserRequest.kt
+|   |   |   |   |   |   |   |   |   |-- LoginUserResponse.kt
+|   |   |   |   |   |   |   |   |   |-- LogoutRequest.kt
+|   |   |   |   |   |   |   |   |   |-- Pagination.kt
+|   |   |   |   |   |   |   |   |   |-- PaginationX.kt
+|   |   |   |   |   |   |   |   |   |-- RegisterUserRequest.kt
+|   |   |   |   |   |   |   |   |   |-- RegisterUserResponse.kt
+|   |   |   |   |   |   |   |   |   |-- SearchApiData.kt
+|   |   |   |   |   |   |   |   |   |-- SetBudgetRequest.kt
+|   |   |   |   |   |   |   |   |   |-- setBudgetResponse.kt
+|   |   |   |   |   |   |   |   |   |-- UpdateExpenseRequest.kt
+|   |   |   |   |   |   |   |   |   |-- UpdateProfileRequest.kt
+|   |   |   |   |   |   |   |   |   |-- User.kt
+|   |   |   |   |   |   |   |   |   |-- UserTokenData.kt
+|   |   |   |   |   |   |   |   |-- repository
+|   |   |   |   |   |   |   |   |   |-- Repository.kt
+|   |   |   |   |   |   |   |-- di
+|   |   |   |   |   |   |   |   |-- DatabaseModule.kt
+|   |   |   |   |   |   |   |   |-- NetworkModule.kt
+|   |   |   |   |   |   |   |-- ExpenseApp.kt
+|   |   |   |   |   |   |   |-- feature
+|   |   |   |   |   |   |   |   |-- analytics
+|   |   |   |   |   |   |   |   |   |-- AnalyticsFragment.kt
+|   |   |   |   |   |   |   |   |   |-- AnalyticsViewModel.kt
+|   |   |   |   |   |   |   |   |-- auth
+|   |   |   |   |   |   |   |   |   |-- AuthViewModel.kt
+|   |   |   |   |   |   |   |   |   |-- LoginFragment.kt
+|   |   |   |   |   |   |   |   |   |-- RegisterFragment.kt
+|   |   |   |   |   |   |   |   |   |-- SplashFragment.kt
+|   |   |   |   |   |   |   |   |   |-- SplashViewModel.kt
+|   |   |   |   |   |   |   |   |-- budget
+|   |   |   |   |   |   |   |   |   |-- BudgetFragment.kt
+|   |   |   |   |   |   |   |   |   |-- BudgetViewModel.kt
+|   |   |   |   |   |   |   |   |-- expense
+|   |   |   |   |   |   |   |   |   |-- add
+|   |   |   |   |   |   |   |   |   |   |-- AddExpenseFragment.kt
+|   |   |   |   |   |   |   |   |   |   |-- AddExpenseViewModel.kt
+|   |   |   |   |   |   |   |   |   |-- detail
+|   |   |   |   |   |   |   |   |   |   |-- ExpanseDetailFragment.kt
+|   |   |   |   |   |   |   |   |   |   |-- ExpenseDetailViewModel.kt
+|   |   |   |   |   |   |   |   |   |-- list
+|   |   |   |   |   |   |   |   |   |   |-- EspenceListFragment.kt
+|   |   |   |   |   |   |   |   |   |   |-- ExpensesViewModel.kt
+|   |   |   |   |   |   |   |   |-- home
+|   |   |   |   |   |   |   |   |   |-- HomeFragment.kt
+|   |   |   |   |   |   |   |   |   |-- HomeViewModel.kt
+|   |   |   |   |   |   |   |   |-- scanner
+|   |   |   |   |   |   |   |   |   |-- ReceiptScannerFragment.kt
+|   |   |   |   |   |   |   |   |-- settings
+|   |   |   |   |   |   |   |   |   |-- EditProfileFragment.kt
+|   |   |   |   |   |   |   |   |   |-- SettingsFragment.kt
+|   |   |   |   |   |   |   |   |   |-- SettingsViewModel.kt
+|   |   |   |   |   |   |   |-- MainActivity.kt
+|   |   |   |   |   |   |   |-- navigation
+|   |   |   |   |   |   |   |   |-- DashboardFragment.kt
+|   |   |   |   |   |   |   |-- sync
+|   |   |   |   |   |   |   |   |-- SyncWorker.kt
+|   |   |   |   |   |   |   |-- ui
+|   |   |   |   |   |   |   |   |-- adapter
+|   |   |   |   |   |   |   |   |   |-- AnalyticsCategoryAdapter.kt
+|   |   |   |   |   |   |   |   |   |-- BudgetAdapter.kt
+|   |   |   |   |   |   |   |   |   |-- DummyAdapter.kt
+|   |   |   |   |   |   |   |   |   |-- ExpenseAdapter.kt
+|   |   |   |   |   |   |   |   |   |-- ExpenseCatAdapter.kt
+|   |   |   |   |   |   |   |   |   |-- LegendAdapter.kt
+|   |   |   |   |   |   |   |   |-- dialog
+|   |   |   |   |   |   |   |   |   |-- AvatarPickerBottomSheet.kt
+|   |   |   |   |   |   |   |   |   |-- MonthYearPickerDialog.kt
+|   |   |   |   |   |   |   |   |   |-- SetBudgetDialog.kt
+|   |   |   |   |   |   |   |   |-- model
+|   |   |   |   |   |   |   |   |   |-- ExpenseListItem.kt
+|   |   |   |   |   |   |-- receiver
+|   |   |   |   |   |   |   |-- SmsReceiver.kt
+|   |   |   |-- res
+|   |   |   |   |-- anim
+|   |   |   |   |   |-- fade_in.xml
+|   |   |   |   |   |-- fade_out.xml
+|   |   |   |   |   |-- slide_down.xml
+|   |   |   |   |   |-- slide_in_left.xml
+|   |   |   |   |   |-- slide_in_right.xml
+|   |   |   |   |   |-- slide_out_left.xml
+|   |   |   |   |   |-- slide_out_right.xml
+|   |   |   |   |   |-- slide_up.xml
+|   |   |   |   |-- color
+|   |   |   |   |   |-- bottom_nav_color.xml
+|   |   |   |   |   |-- bottom_nav_selector.xml
+|   |   |   |   |   |-- divider_color.xml
+|   |   |   |   |-- drawable
+|   |   |   |   |   |-- bg_avatar_circle.xml
+|   |   |   |   |   |-- bg_badge_warning.xml
+|   |   |   |   |   |-- bg_button_filled.xml
+|   |   |   |   |   |-- bg_button_outline.xml
+|   |   |   |   |   |-- bg_card.xml
+|   |   |   |   |   |-- bg_category_normal.xml
+|   |   |   |   |   |-- bg_category_selected.xml
+|   |   |   |   |   |-- bg_chip_selected.xml
+|   |   |   |   |   |-- bg_chip.xml
+|   |   |   |   |   |-- bg_circle_button.xml
+|   |   |   |   |   |-- bg_circle_splash_logo.xml
+|   |   |   |   |   |-- bg_circle_subtle.xml
+|   |   |   |   |   |-- bg_circle.xml
+|   |   |   |   |   |-- bg_edittext.xml
+|   |   |   |   |   |-- bg_icon_button.xml
+|   |   |   |   |   |-- bg_icon_circle.xml
+|   |   |   |   |   |-- bg_item_expense.xml
+|   |   |   |   |   |-- bg_legend_dot.xml
+|   |   |   |   |   |-- bg_month_normal.xml
+|   |   |   |   |   |-- bg_month_selected.xml
+|   |   |   |   |   |-- bg_progress_bar.xml
+|   |   |   |   |   |-- bg_save_button.xml
+|   |   |   |   |   |-- bg_search.xml
+|   |   |   |   |   |-- bg_small_card.xml
+|   |   |   |   |   |-- bg_tag.xml
+|   |   |   |   |   |-- camera.png
+|   |   |   |   |   |-- dot_green.xml
+|   |   |   |   |   |-- dot_orange.xml
+|   |   |   |   |   |-- dot_purple.xml
+|   |   |   |   |   |-- dot_red.xml
+|   |   |   |   |   |-- exp.png
+|   |   |   |   |   |-- help_center.png
+|   |   |   |   |   |-- ic_add.xml
+|   |   |   |   |   |-- ic_any.png
+|   |   |   |   |   |-- ic_apple.png
+|   |   |   |   |   |-- ic_back.xml
+|   |   |   |   |   |-- ic_bills.png
+|   |   |   |   |   |-- ic_bug.png
+|   |   |   |   |   |-- ic_calendar.xml
+|   |   |   |   |   |-- ic_edit.xml
+|   |   |   |   |   |-- ic_entertainment.png
+|   |   |   |   |   |-- ic_food.png
+|   |   |   |   |   |-- ic_google.png
+|   |   |   |   |   |-- ic_health.png
+|   |   |   |   |   |-- ic_home.png
+|   |   |   |   |   |-- ic_invest.png
+|   |   |   |   |   |-- ic_launcher_background.xml
+|   |   |   |   |   |-- ic_launcher_foreground.xml
+|   |   |   |   |   |-- ic_money.xml
+|   |   |   |   |   |-- ic_other.png
+|   |   |   |   |   |-- ic_search_small.xml
+|   |   |   |   |   |-- ic_set.png
+|   |   |   |   |   |-- ic_shopping.png
+|   |   |   |   |   |-- ic_transparent.xml
+|   |   |   |   |   |-- ic_transport.png
+|   |   |   |   |   |-- img_1.png
+|   |   |   |   |   |-- img_2.png
+|   |   |   |   |   |-- img_3.png
+|   |   |   |   |   |-- img_home.png
+|   |   |   |   |   |-- img.png
+|   |   |   |   |   |-- outline_arrow_back_ios_24.xml
+|   |   |   |   |   |-- outline_arrow_back_ios_25.xml
+|   |   |   |   |   |-- outline_arrow_forward_ios_24.xml
+|   |   |   |   |   |-- progress_bar.xml
+|   |   |   |   |-- font
+|   |   |   |   |   |-- poppins_bold.ttf
+|   |   |   |   |   |-- poppins_medium.ttf
+|   |   |   |   |   |-- poppins_regular.ttf
+|   |   |   |   |   |-- poppins.xml
+|   |   |   |   |-- layout
+|   |   |   |   |   |-- activity_environment.xml
+|   |   |   |   |   |-- activity_main.xml
+|   |   |   |   |   |-- dialog_month_year_picker.xml
+|   |   |   |   |   |-- dialog_set_budget.xml
+|   |   |   |   |   |-- fragment_add_expense.xml
+|   |   |   |   |   |-- fragment_analytics.xml
+|   |   |   |   |   |-- fragment_avatar_picker.xml
+|   |   |   |   |   |-- fragment_budget.xml
+|   |   |   |   |   |-- fragment_dashboard.xml
+|   |   |   |   |   |-- fragment_edit_profile.xml
+|   |   |   |   |   |-- fragment_espence_list.xml
+|   |   |   |   |   |-- fragment_expanse_detail.xml
+|   |   |   |   |   |-- fragment_home.xml
+|   |   |   |   |   |-- fragment_login.xml
+|   |   |   |   |   |-- fragment_receipt_scanner.xml
+|   |   |   |   |   |-- fragment_register.xml
+|   |   |   |   |   |-- fragment_settings.xml
+|   |   |   |   |   |-- fragment_splash.xml
+|   |   |   |   |   |-- item_analytics.xml
+|   |   |   |   |   |-- item_budget.xml
+|   |   |   |   |   |-- item_category.xml
+|   |   |   |   |   |-- item_date_header.xml
+|   |   |   |   |   |-- item_expense.xml
+|   |   |   |   |   |-- item_expenses.xml
+|   |   |   |   |   |-- item_legend_row.xml
+|   |   |   |   |   |-- item_small_card.xml
+|   |   |   |   |   |-- loading_overlay.xml
+|   |   |   |   |   |-- simple_spinner_dropdown_item.xml
+|   |   |   |   |   |-- simple_spinner_item.xml
+|   |   |   |   |-- menu
+|   |   |   |   |   |-- bottom_nav_menu.xml
+|   |   |   |   |-- mipmap-anydpi-v26
+|   |   |   |   |   |-- ic_launcher_round.xml
+|   |   |   |   |   |-- ic_launcher.xml
+|   |   |   |   |-- mipmap-hdpi
+|   |   |   |   |   |-- ic_launcher_round.webp
+|   |   |   |   |   |-- ic_launcher.webp
+|   |   |   |   |-- mipmap-mdpi
+|   |   |   |   |   |-- ic_launcher_round.webp
+|   |   |   |   |   |-- ic_launcher.webp
+|   |   |   |   |-- mipmap-xhdpi
+|   |   |   |   |   |-- ic_launcher_round.webp
+|   |   |   |   |   |-- ic_launcher.webp
+|   |   |   |   |-- mipmap-xxhdpi
+|   |   |   |   |   |-- ic_launcher_round.webp
+|   |   |   |   |   |-- ic_launcher.webp
+|   |   |   |   |-- mipmap-xxxhdpi
+|   |   |   |   |   |-- ic_launcher_round.webp
+|   |   |   |   |   |-- ic_launcher.webp
+|   |   |   |   |-- navigation
+|   |   |   |   |   |-- nav_graph.xml
+|   |   |   |   |-- raw
+|   |   |   |   |   |-- coin.json
+|   |   |   |   |   |-- expense.json
+|   |   |   |   |   |-- home.json
+|   |   |   |   |   |-- loading.json
+|   |   |   |   |   |-- untitled.json
+|   |   |   |   |-- values
+|   |   |   |   |-- values-night
+|   |   |   |   |   |-- colors.xml
+|   |   |   |   |   |-- themes.xml
+|   |   |   |   |-- values-v31
+|   |   |   |   |   |-- colors.xml
+|   |   |   |   |   |-- dimens.xml
+|   |   |   |   |   |-- ids.xml
+|   |   |   |   |   |-- strings.xml
+|   |   |   |   |   |-- styles.xml
+|   |   |   |   |   |-- themes.xml
+|   |   |   |   |-- xml
+|   |   |   |   |   |-- backup_rules.xml
+|   |   |   |   |   |-- data_extraction_rules.xml
+|   |   |   |   |   |-- network_security_config.xml
+|   |   |-- test
+|   |   |   |-- java
+|   |   |   |   |-- com
+|   |   |   |   |   |-- example
+|   |   |   |   |   |   |-- expense
+|   |   |   |   |   |   |   |-- ExampleUnitTest.kt
+|-- docs
+|   |-- ROOM_INTEGRATION.md
+|-- gradle
+|-- gradle.properties
+|   |-- gradle-daemon-jvm.properties
+|   |-- libs.versions.toml
+|   |-- wrapper
+|   |   |-- gradle-wrapper.jar
+|   |   |-- gradle-wrapper.properties
+|-- gradlew
+|-- gradlew.bat
+|-- local.properties
+|-- project_context.txt
+|-- settings.gradle.kts

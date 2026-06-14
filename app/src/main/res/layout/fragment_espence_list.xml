@@ -19,7 +19,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_scrollFlags="noScroll">
+            >
 
             <TextView
                 android:id="@+id/tvTitle"
@@ -55,7 +55,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-           >
+            app:layout_scrollFlags="scroll|enterAlways|snap">
 
             <!-- CHIP GROUP -->
             <com.google.android.material.chip.ChipGroup
@@ -132,8 +132,7 @@
                     android:paddingStart="4dp"
                     android:paddingEnd="8dp"
                     android:paddingVertical="12dp"
-                    android:textColor="@color/text_primary"
-                    android:textColorHint="@color/text_hint"/>
+                    android:textColor="@color/text_primary" />
 
             </com.google.android.material.textfield.TextInputLayout>
 

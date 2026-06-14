@@ -6,7 +6,7 @@
     app:startDestination="@id/splashFragment2">
     <fragment
         android:id="@+id/splashFragment2"
-        android:name="com.example.expense.SplashFragment"
+        android:name="com.example.expense.feature.auth.SplashFragment"
         android:label="fragment_splash"
         tools:layout="@layout/fragment_splash" >
         <action
@@ -18,7 +18,7 @@
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.example.expense.LoginFragment"
+        android:name="com.example.expense.feature.auth.LoginFragment"
         android:label="fragment_login"
         tools:layout="@layout/fragment_login" >
         <action
@@ -30,7 +30,7 @@
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
-        android:name="com.example.expense.RegisterFragment"
+        android:name="com.example.expense.feature.auth.RegisterFragment"
         android:label="fragment_register"
         tools:layout="@layout/fragment_register" >
         <action
@@ -45,26 +45,32 @@
     </fragment>
     <fragment
         android:id="@+id/dashboardFragment"
-        android:name="com.example.expense.DashboardFragment"
+        android:name="com.example.expense.navigation.DashboardFragment"
         android:label="fragment_dashboard"
         tools:layout="@layout/fragment_dashboard" >
         <action
             android:id="@+id/action_dashboardFragment_to_addExpenseFragment"
             app:destination="@id/addExpenseFragment" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_expanseDetailFragment"
+            app:destination="@id/expanseDetailFragment" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_editProfileFragment"
+            app:destination="@id/editProfileFragment" />
     </fragment>
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.expense.HomeFragment"
+        android:name="com.example.expense.feature.home.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" />
     <fragment
         android:id="@+id/espenceListFragment"
-        android:name="com.example.expense.EspenceListFragment"
+        android:name="com.example.expense.feature.expense.list.EspenceListFragment"
         android:label="fragment_espence_list"
         tools:layout="@layout/fragment_espence_list" />
     <fragment
         android:id="@+id/addExpenseFragment"
-        android:name="com.example.expense.AddExpenseFragment"
+        android:name="com.example.expense.feature.expense.add.AddExpenseFragment"
         android:label="fragment_add_expense"
         tools:layout="@layout/fragment_add_expense" >
         <action
@@ -73,27 +79,36 @@
     </fragment>
     <fragment
         android:id="@+id/expanseDetailFragment"
-        android:name="com.example.expense.ExpanseDetailFragment"
+        android:name="com.example.expense.feature.expense.detail.ExpanseDetailFragment"
         android:label="fragment_expanse_detail"
-        tools:layout="@layout/fragment_expanse_detail" />
+        tools:layout="@layout/fragment_expanse_detail" >
+        <argument
+            android:name="expenseId"
+            app:argType="string" />
+    </fragment>
     <fragment
         android:id="@+id/budgetFragment"
-        android:name="com.example.expense.BudgetFragment"
+        android:name="com.example.expense.feature.budget.BudgetFragment"
         android:label="fragment_budget"
         tools:layout="@layout/fragment_budget" />
     <fragment
         android:id="@+id/analyticsFragment"
-        android:name="com.example.expense.AnalyticsFragment"
+        android:name="com.example.expense.feature.analytics.AnalyticsFragment"
         android:label="fragment_analytics"
         tools:layout="@layout/fragment_analytics" />
     <fragment
         android:id="@+id/receiptScannerFragment"
-        android:name="com.example.expense.ReceiptScannerFragment"
+        android:name="com.example.expense.feature.scanner.ReceiptScannerFragment"
         android:label="fragment_receipt_scanner"
         tools:layout="@layout/fragment_receipt_scanner" />
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.example.expense.SettingsFragment"
+        android:name="com.example.expense.feature.settings.SettingsFragment"
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="com.example.expense.feature.settings.EditProfileFragment"
+        android:label="fragment_edit_profile"
+        tools:layout="@layout/fragment_edit_profile" />
 </navigation>

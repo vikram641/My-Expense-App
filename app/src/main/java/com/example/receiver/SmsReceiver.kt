@@ -10,8 +10,8 @@ import android.os.Build
 import android.provider.Telephony
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import com.example.data.model.Repository
-import com.example.data.model.AddExpenseRequest
+import com.example.expense.data.repository.Repository
+import com.example.expense.data.model.AddExpenseRequest
 import com.example.expense.R
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.EntryPoint

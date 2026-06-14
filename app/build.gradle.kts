@@ -8,7 +8,20 @@ plugins {
 android {
     namespace = "com.example.expense"
     compileSdk = 34
+    buildTypes {
+        debug {
+            isDebuggable = true
+        }
 
+        release {
+            isDebuggable = false
+            isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+    }
     defaultConfig {
         applicationId = "com.example.expense"
         minSdk = 24
@@ -18,15 +31,15 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-        }
-    }
+//    buildTypes {
+//        release {
+//            isMinifyEnabled = false
+//            proguardFiles(
+//                getDefaultProguardFile("proguard-android-optimize.txt"),
+//                "proguard-rules.pro"
+//            )
+//        }
+//    }
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -40,6 +53,8 @@ android {
     buildFeatures {
         viewBinding = true
         dataBinding = true
+        buildConfig = true
+
     }
 }
 
@@ -78,6 +93,16 @@ dependencies {
     kapt(libs.hilt.compiler)
     implementation("androidx.hilt:hilt-navigation-fragment:1.1.0")
 
+    // WorkManager + Hilt-Work integration
+    implementation("androidx.work:work-runtime-ktx:2.9.0")
+    implementation("androidx.hilt:hilt-work:1.1.0")
+    kapt("androidx.hilt:hilt-compiler:1.1.0")
+
+    // Room
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)          // Flow + coroutine suspend support
+    kapt(libs.room.compiler)
+
     // Glide
     implementation("com.github.bumptech.glide:glide:4.16.0")
     kapt("com.github.bumptech.glide:compiler:4.16.0")
@@ -101,10 +126,6 @@ dependencies {
     implementation("com.airbnb.android:lottie:6.4.0")
 
     implementation("com.github.Dimezis:BlurView:version-2.0.4")
-
-
-
-
 
 }
 

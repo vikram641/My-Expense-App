@@ -5,7 +5,7 @@
     <data>
         <variable
             name="vm"
-            type="com.example.AuthViewModel" />
+            type="com.example.expense.feature.auth.AuthViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

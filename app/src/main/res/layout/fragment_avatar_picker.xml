@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/bg_card"
+    android:paddingBottom="40dp">
+
+    <!-- Handle -->
+    <View
+        android:layout_width="40dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/bg_tag"/>
+
+    <!-- Title -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Choose Your Avatar"
+        android:textColor="@color/text_primary"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="4dp"/>
+
+    <!-- Subtitle -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tap one to set as your profile avatar"
+        android:textColor="@color/text_secondary"
+        android:textSize="13sp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="20dp"/>
+
+    <!-- Avatar Grid — populated programmatically -->
+    <GridLayout
+        android:id="@+id/avatarGrid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="4"
+        android:layout_marginHorizontal="12dp"/>
+
+    <!-- Remove avatar -->
+    <TextView
+        android:id="@+id/tvRemoveAvatar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Use initials instead"
+        android:textColor="@color/text_secondary"
+        android:textSize="13sp"
+        android:gravity="center"
+        android:padding="16dp"/>
+
+</LinearLayout>
