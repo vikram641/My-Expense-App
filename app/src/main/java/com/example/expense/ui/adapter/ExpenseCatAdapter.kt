@@ -82,6 +82,17 @@ class ExpenseCatAdapter(
 
     }
 
+    /** Highlights the category matching [categoryId], e.g. when pre-filling an edit screen. */
+    fun preselect(categoryId: String) {
+        val position = currentList.indexOfFirst { it.id == categoryId }
+        if (position == -1 || position == selectedPosition) return
+
+        val previous = selectedPosition
+        selectedPosition = position
+        notifyItemChanged(previous)
+        notifyItemChanged(selectedPosition)
+    }
+
 //    override fun getItemCount(): Int {
 //       return list.size
 //

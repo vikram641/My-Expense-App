@@ -1,11 +1,16 @@
 package com.example.expense.feature.settings
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavOptions
@@ -15,8 +20,14 @@ import com.example.expense.R
 import com.example.expense.core.UiState
 import com.example.expense.core.base.BaseFragment
 import com.example.expense.core.util.AvatarManager
+import com.example.expense.core.util.OnboardingPrefs
 import com.example.expense.core.util.TokenManager
 import com.example.expense.databinding.FragmentSettingsBinding
+import com.example.expense.navigation.DashboardFragment
+import com.example.expense.sync.SyncWorker
+import com.example.expense.ui.dialog.ExportDataDialog
+import com.example.expense.ui.dialog.ExportRange
+import com.example.expense.ui.dialog.LogoutConfirmDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -32,6 +43,17 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>() {
     @Inject
     lateinit var avatarManager: AvatarManager
 
+    @Inject
+    lateinit var onboardingPrefs: OnboardingPrefs
+
+    // Only actually needed on API 24-28 (see manifest's maxSdkVersion="28" on
+    // WRITE_EXTERNAL_STORAGE) - API 29+ exports via MediaStore, no permission required.
+    private val requestExportPermission = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        if (granted) openExportDialog() else showToast("Storage permission is needed to export")
+    }
+
     override fun inflateBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
@@ -44,10 +66,13 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>() {
         val prefs = requireContext().getSharedPreferences(
             "settings",
             Context.MODE_PRIVATE
+
         )
 
+
+
 // Restore saved theme state
-        val isDarkMode = prefs.getBoolean("dark_mode", false)
+        val isDarkMode = prefs.getBoolean("dark_mode", true)
 
         binding.switchTheme.isChecked = isDarkMode
 
@@ -60,15 +85,41 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>() {
             }
         )
 
+        // Show the local onboarding profile immediately (see CLAUDE.md "Offline mode") -
+        // getUserProfile() below overwrites this if a real server profile fetch succeeds.
+        binding.tvName.text = onboardingPrefs.getUserName().orEmpty()
+        binding.tvCurrencyValue.text = onboardingPrefs.getCurrencyCode()
+        refreshAvatarDisplay(onboardingPrefs.getUserName().orEmpty())
+
         settingsViewModel.getUserProfile()
 
         binding.profileCard.setOnClickListener {
             findNavController().navigate(R.id.action_dashboardFragment_to_editProfileFragment)
         }
 
+        val onExportRowClicked = View.OnClickListener {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q &&
+                ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED
+            ) {
+                requestExportPermission.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            } else {
+                openExportDialog()
+            }
+        }
+        binding.iconExport.setOnClickListener(onExportRowClicked)
+        binding.tvExport.setOnClickListener(onExportRowClicked)
+        binding.rowExportClickTarget.setOnClickListener(onExportRowClicked)
+
         binding.btnLogout.setOnClickListener {
-            val refreshToken = tokenManager.getRefreshToken() ?: ""
-            settingsViewModel.logout(refreshToken)
+            LogoutConfirmDialog { syncBeforeLogout ->
+                val refreshToken = tokenManager.getRefreshToken() ?: ""
+                if (syncBeforeLogout) {
+                    settingsViewModel.logout(refreshToken)
+                } else {
+                    settingsViewModel.logoutWithoutSync(refreshToken)
+                }
+            }.show(childFragmentManager, "logout_confirm")
         }
 
 // Theme change listener
@@ -125,9 +176,27 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>() {
         }
 
         lifecycleScope.launch {
+            settingsViewModel.exportState.collect { state ->
+                when (state) {
+                    is UiState.Success -> {
+                        showLoading(false)
+                        showToast(state.data)
+                    }
+                    is UiState.Error -> {
+                        showLoading(false)
+                        showToast(state.message)
+                    }
+                    is UiState.Loading -> showLoading(true)
+                    UiState.Idle -> {}
+                }
+            }
+        }
+
+        lifecycleScope.launch {
             settingsViewModel.logoutState.collect { state ->
                 when (state) {
-                    is UiState.Success, is UiState.Error -> {
+                    is UiState.Success -> {
+                        showLoading(false)
                         tokenManager.clearSession()
                         findNavController().navigate(
                             R.id.loginFragment,
@@ -137,10 +206,34 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>() {
                                 .build()
                         )
                     }
+                    is UiState.Error -> {
+                        showLoading(false)
+                        showToast(state.message)
+                    }
+                    is UiState.Loading -> {
+                        showLoading(true)
+                    }
                     else -> {}
                 }
             }
         }
+    }
+
+    private fun openExportDialog() {
+        ExportDataDialog { range ->
+            settingsViewModel.exportData(range)
+        }.show(childFragmentManager, "export_data")
+    }
+
+    private fun showLoading(show: Boolean) {
+        if (show) {
+            binding.loaderLayout.visibility = View.VISIBLE
+            binding.lottieProgress.playAnimation()
+        } else {
+            binding.lottieProgress.cancelAnimation()
+            binding.loaderLayout.visibility = View.GONE
+        }
+        (parentFragment as? DashboardFragment)?.setBottomNavInteractionEnabled(!show)
     }
 
 //    private fun setupRecycler() {

@@ -134,6 +134,20 @@
                     app:layout_constraintStart_toStartOf="parent"
                     android:layout_marginTop="8dp"/>
 
+                <!-- Empty state (no budget data for the selected month) -->
+                <TextView
+                    android:id="@+id/tvEmptyOverall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="No budget data for this month"
+                    android:textColor="@color/text_hint"
+                    android:textSize="13sp"
+                    android:visibility="gone"
+                    app:layout_constraintTop_toBottomOf="@id/tvOverall"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </com.google.android.material.card.MaterialCardView>

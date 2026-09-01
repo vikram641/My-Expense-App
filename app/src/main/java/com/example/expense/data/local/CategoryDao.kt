@@ -12,8 +12,13 @@ interface CategoryDao {
     @Query("SELECT * FROM categories")
     fun observeCategories(): Flow<List<CategoryEntity>>
 
+
+
     @Query("SELECT * FROM categories")
     suspend fun getAll(): List<CategoryEntity>
+
+    @Query("""SELECT * FROM categories WHERE id = :catId LIMIT 1 """)
+    suspend fun getCategoryById(catId: String): CategoryEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertCategories(categories: List<CategoryEntity>)

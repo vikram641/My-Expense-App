@@ -8,5 +8,7 @@ data class BudgetData(
     val id: String,
     val limitAmount: Int,
     val month: String,
-    val spentAmount: Int
+    val spentAmount: Int,
+    // changes
+    val categoryIcon : String
 )

@@ -63,6 +63,18 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvChartTitle" />
 
+        <include
+            android:id="@+id/layoutChartEmpty"
+            layout="@layout/layout_analytics_empty_state"
+            android:layout_width="0dp"
+            android:layout_height="200dp"
+            android:layout_marginTop="12dp"
+            android:visibility="gone"
+            tools:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvChartTitle" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -105,6 +117,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvTop"
         tools:listitem="@layout/item_analytics" />
+
+    <include
+        android:id="@+id/layoutCategoriesEmpty"
+        layout="@layout/layout_analytics_empty_state"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_card"
+        android:visibility="gone"
+        tools:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvTop" />
 
 <!--    </com.google.android.material.card.MaterialCardView>-->
 

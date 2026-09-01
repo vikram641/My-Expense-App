@@ -55,4 +55,16 @@
         <item name="android:windowExitAnimation">@anim/slide_down</item>
     </style>
 
+    <!-- Onboarding quick-pick chip (budget amounts) -->
+    <style name="OnboardingChip">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">44dp</item>
+        <item name="android:background">@drawable/bg_chip_outline</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingHorizontal">16dp</item>
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:textSize">13.5sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
 </resources>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/bg_empty_state_circle"/>
+    <item
+        android:width="52dp"
+        android:height="52dp"
+        android:gravity="center"
+        android:drawable="@drawable/ic_wallet_empty"/>
+</layer-list>

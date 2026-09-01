@@ -96,4 +96,10 @@
 
     <!-- Divider / stroke -->
     <color name="stroke_subtle">#33FFFFFF</color>
+
+    <!-- Home AI Insight card - a deliberately distinct tinted card, so this gets
+         its own tokens (with a values-night override) rather than reusing bg_card. -->
+    <color name="ai_insight_bg_start">#EFEDFC</color>
+    <color name="ai_insight_bg_end">#FBFAFF</color>
+    <color name="ai_insight_stroke">#E2DBFB</color>
 </resources>

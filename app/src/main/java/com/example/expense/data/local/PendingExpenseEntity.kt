@@ -11,11 +11,14 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "pending_expenses")
 data class PendingExpenseEntity(
     @PrimaryKey(autoGenerate = true) val localId: Long = 0,
-    val amount: Int,
+    val amount: String,
     val categoryId: String,
     val currency: String,
     val date: String,
     val note: String,
     val receiptUrl: String,
-    val createdAtLocal: Long = System.currentTimeMillis()
+    val createdAtLocal: Long = System.currentTimeMillis(),
+    val categoryName : String ,
+    val categoryIcon : String,
+    val categoryColor : String
 )

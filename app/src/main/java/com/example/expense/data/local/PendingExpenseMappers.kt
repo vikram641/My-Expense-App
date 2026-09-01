@@ -10,7 +10,11 @@ fun AddExpenseRequest.toPendingEntity(): PendingExpenseEntity =
         currency = currency,
         date = date,
         note = note,
-        receiptUrl = receiptUrl
+        receiptUrl = receiptUrl,
+        categoryName = categoryName,
+        categoryIcon = categoryIcon,
+        categoryColor = categoryColor
+
     )
 
 /** Rebuild the API request when draining the queue. */
@@ -21,5 +25,8 @@ fun PendingExpenseEntity.toRequest(): AddExpenseRequest =
         currency = currency,
         date = date,
         note = note,
-        receiptUrl = receiptUrl
+        receiptUrl = receiptUrl,
+        categoryName = categoryName,
+        categoryIcon = categoryIcon,
+        categoryColor = categoryColor
     )

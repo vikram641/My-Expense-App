@@ -6,11 +6,13 @@ import com.example.expense.data.model.DeleteResponse
 import com.example.expense.data.model.ExpenseSummaryResponse
 import com.example.expense.data.model.ExpenseWeeklySummaryResponse
 import com.example.expense.data.model.ExpensesResponse
+import com.example.expense.data.model.FcmTokenRequest
 import com.example.expense.data.model.UpdateProfileRequest
 import com.example.expense.data.model.User
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Query
 
@@ -33,4 +35,7 @@ interface HomeApiInterface {
 
     @PUT("/api/user/change-password")
     suspend fun changePassword(@Body request: ChangePasswordRequest): Response<ApiResponse<DeleteResponse>>
+
+    @POST("/api/user/fcm-token")
+    suspend fun sendFcmToken(@Body request: FcmTokenRequest): Response<ApiResponse<DeleteResponse>>
 }

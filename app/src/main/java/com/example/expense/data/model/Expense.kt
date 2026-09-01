@@ -8,6 +8,9 @@ data class Expense(
     val date: String,
     val id: String,
     val note: String,
+
+    // receiptUrl type change ANY to string
     val receiptUrl: Any,
     val updatedAt: String
 )
+

@@ -11,10 +11,19 @@
         tools:layout="@layout/fragment_splash" >
         <action
             android:id="@+id/action_splashFragment2_to_loginFragment"
-            app:destination="@id/loginFragment" />
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/splashFragment2"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_splashFragment2_to_dashboardFragment"
-            app:destination="@id/dashboardFragment" />
+            app:destination="@id/dashboardFragment"
+            app:popUpTo="@id/splashFragment2"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_splashFragment2_to_welcomeFragment"
+            app:destination="@id/welcomeFragment"
+            app:popUpTo="@id/splashFragment2"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
@@ -57,6 +66,9 @@
         <action
             android:id="@+id/action_dashboardFragment_to_editProfileFragment"
             app:destination="@id/editProfileFragment" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_chatFragment"
+            app:destination="@id/chatFragment" />
     </fragment>
     <fragment
         android:id="@+id/homeFragment"
@@ -76,6 +88,14 @@
         <action
             android:id="@+id/action_addExpenseFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_addExpenseFragment_to_receiptScannerFragment"
+            app:destination="@id/receiptScannerFragment" />
+        <argument
+            android:name="expenseId"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
     <fragment
         android:id="@+id/expanseDetailFragment"
@@ -85,6 +105,9 @@
         <argument
             android:name="expenseId"
             app:argType="string" />
+        <action
+            android:id="@+id/action_expanseDetailFragment_to_addExpenseFragment"
+            app:destination="@id/addExpenseFragment" />
     </fragment>
     <fragment
         android:id="@+id/budgetFragment"
@@ -102,6 +125,11 @@
         android:label="fragment_receipt_scanner"
         tools:layout="@layout/fragment_receipt_scanner" />
     <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.example.expense.feature.chat.ChatFragment"
+        android:label="fragment_chat"
+        tools:layout="@layout/fragment_chat" />
+    <fragment
         android:id="@+id/settingsFragment"
         android:name="com.example.expense.feature.settings.SettingsFragment"
         android:label="fragment_settings"
@@ -111,4 +139,144 @@
         android:name="com.example.expense.feature.settings.EditProfileFragment"
         android:label="fragment_edit_profile"
         tools:layout="@layout/fragment_edit_profile" />
+
+    <!-- Onboarding - first-run flow shown instead of Login/Register (see CLAUDE.md
+         "Onboarding replaces login on first run"). Folded into this single graph/Activity
+         (previously a separate OnboardingActivity + nav_graph_onboarding.xml) so the whole
+         app launch only ever shows one system splash screen - see "Splash screen" in
+         CLAUDE.md for why a second Activity meant a second one. -->
+    <fragment
+        android:id="@+id/welcomeFragment"
+        android:name="com.example.expense.feature.onboarding.WelcomeFragment"
+        android:label="fragment_onboarding_welcome"
+        tools:layout="@layout/fragment_onboarding_welcome">
+        <action
+            android:id="@+id/action_welcomeFragment_to_featureScanFragment"
+            app:destination="@id/featureScanFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/featureScanFragment"
+        android:name="com.example.expense.feature.onboarding.OnboardingFeatureFragment"
+        android:label="fragment_onboarding_feature"
+        tools:layout="@layout/fragment_onboarding_feature">
+        <argument android:name="icon_res" app:argType="reference" android:defaultValue="@drawable/ic_receipt_scan" />
+        <argument android:name="title" app:argType="string" android:defaultValue="Scan receipts in seconds" />
+        <argument android:name="subtitle" app:argType="string" android:defaultValue="Snap a photo and AI instantly fills in the amount, date, merchant, and category for you." />
+        <argument android:name="step_index" app:argType="integer" android:defaultValue="0" />
+        <argument android:name="button_text" app:argType="string" android:defaultValue="Next" />
+        <argument android:name="animation" app:argType="string" android:defaultValue="scan" />
+        <argument android:name="next_action_id" app:argType="reference" android:defaultValue="@id/action_featureScanFragment_to_featureAutoDebitFragment" />
+        <action
+            android:id="@+id/action_featureScanFragment_to_featureAutoDebitFragment"
+            app:destination="@id/featureAutoDebitFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/featureAutoDebitFragment"
+        android:name="com.example.expense.feature.onboarding.OnboardingFeatureFragment"
+        android:label="fragment_onboarding_feature"
+        tools:layout="@layout/fragment_onboarding_feature">
+        <argument android:name="icon_res" app:argType="reference" android:defaultValue="@drawable/ic_autodebit" />
+        <argument android:name="title" app:argType="string" android:defaultValue="Never miss a due date" />
+        <argument android:name="subtitle" app:argType="string" android:defaultValue="Track recurring bills and auto-debit payments — we'll remind you before they're due." />
+        <argument android:name="step_index" app:argType="integer" android:defaultValue="1" />
+        <argument android:name="button_text" app:argType="string" android:defaultValue="Next" />
+        <argument android:name="animation" app:argType="string" android:defaultValue="none" />
+        <argument android:name="next_action_id" app:argType="reference" android:defaultValue="@id/action_featureAutoDebitFragment_to_featureAlertsFragment" />
+        <action
+            android:id="@+id/action_featureAutoDebitFragment_to_featureAlertsFragment"
+            app:destination="@id/featureAlertsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/featureAlertsFragment"
+        android:name="com.example.expense.feature.onboarding.OnboardingFeatureFragment"
+        android:label="fragment_onboarding_feature"
+        tools:layout="@layout/fragment_onboarding_feature">
+        <argument android:name="icon_res" app:argType="reference" android:defaultValue="@drawable/ic_bell_outline" />
+        <argument android:name="title" app:argType="string" android:defaultValue="Smart alerts, right on time" />
+        <argument android:name="subtitle" app:argType="string" android:defaultValue="Get notified when you're close to a budget limit or a bill is coming up." />
+        <argument android:name="step_index" app:argType="integer" android:defaultValue="2" />
+        <argument android:name="button_text" app:argType="string" android:defaultValue="Let's go" />
+        <argument android:name="animation" app:argType="string" android:defaultValue="pulse" />
+        <argument android:name="next_action_id" app:argType="reference" android:defaultValue="@id/action_featureAlertsFragment_to_setupNameFragment" />
+        <action
+            android:id="@+id/action_featureAlertsFragment_to_setupNameFragment"
+            app:destination="@id/setupNameFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/setupNameFragment"
+        android:name="com.example.expense.feature.onboarding.SetupNameFragment"
+        android:label="fragment_onboarding_setup_name"
+        tools:layout="@layout/fragment_onboarding_setup_name">
+        <action
+            android:id="@+id/action_setupNameFragment_to_setupBudgetFragment"
+            app:destination="@id/setupBudgetFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/setupBudgetFragment"
+        android:name="com.example.expense.feature.onboarding.SetupBudgetFragment"
+        android:label="fragment_onboarding_setup_budget"
+        tools:layout="@layout/fragment_onboarding_setup_budget">
+        <action
+            android:id="@+id/action_setupBudgetFragment_to_setupCurrencyFragment"
+            app:destination="@id/setupCurrencyFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/setupCurrencyFragment"
+        android:name="com.example.expense.feature.onboarding.SetupCurrencyFragment"
+        android:label="fragment_onboarding_setup_currency"
+        tools:layout="@layout/fragment_onboarding_setup_currency">
+        <action
+            android:id="@+id/action_setupCurrencyFragment_to_allSetFragment"
+            app:destination="@id/allSetFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/allSetFragment"
+        android:name="com.example.expense.feature.onboarding.AllSetFragment"
+        android:label="fragment_onboarding_all_set"
+        tools:layout="@layout/fragment_onboarding_all_set">
+        <action
+            android:id="@+id/action_allSetFragment_to_dashboardFragment"
+            app:destination="@id/dashboardFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/welcomeFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 </navigation>

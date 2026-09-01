@@ -28,7 +28,7 @@ interface ExpenseInterface {
     suspend fun addExpense(@Body addExpenseRequest: AddExpenseRequest): Response<ApiResponse<AddExpenseResponse>>
 
     @GET("api/expenses")
-    suspend fun getExpenses(
+    suspend fun pogetExpenses(
         @Query("page") page: Int = 1,
         @Query("limit") limit: Int = 20,
         @Query("category") category: String? = null,

@@ -2,6 +2,7 @@ package com.example.expense.feature.auth
 
 import android.R
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,10 +13,16 @@ import com.example.expense.data.model.RegisterUserRequest
 import com.example.expense.data.model.RegisterUserResponse
 import com.example.expense.data.repository.Repository
 import com.example.expense.core.UiState
+import com.example.expense.data.local.toEntityList
+import com.example.expense.data.local.toEntityListExpenses
+import com.example.expense.data.local.toEntityListX
+import com.example.expense.data.model.ExpensesResponse
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 @HiltViewModel
@@ -89,6 +96,7 @@ class AuthViewModel @Inject constructor(private val repository: Repository): Vie
 
         _validateLoginData.value = utils.validateUserLoginInput(request)
 
+
         if(_validateLoginData.value.first){
             loginUser()
 
@@ -110,8 +118,69 @@ class AuthViewModel @Inject constructor(private val repository: Repository): Vie
         viewModelScope.launch {
             _loginState.value = UiState.Loading
             _loginState.value = repository.loginUser(request)
+
         }
     }
+
+    /**
+     * Fetches the device's current FCM registration token and sends it to the backend for
+     * the just-logged-in user.
+     *
+     * Disabled while the app runs fully offline - see CLAUDE.md "Offline mode (temporary)".
+     * Not called from anywhere right now (LoginFragment's call site is commented out too).
+     */
+    fun registerFcmToken() {
+//        viewModelScope.launch {
+//            try {
+//                val token = FirebaseMessaging.getInstance().token.await()
+//                repository.sendFcmToken(token)
+//            } catch (e: Exception) {
+//                Log.e("AuthViewModel", "Failed to register FCM token", e)
+//            }
+//        }
+    }
+
+    /** Pulls the last two months of budgets from the backend and caches them locally for the just-logged-in user. */
+//    fun syncBudgets() {
+//        viewModelScope.launch {
+//            when (val result = repository.getSyncForBudget()) {
+//                is UiState.Success -> repository.saveBudgetsLocally(result.data.data.budgets.toEntityListX())
+//                is UiState.Error -> Log.e("AuthViewModel", "Failed to sync budgets: ${result.message}")
+//                else -> {}
+//            }
+//        }
+//    }
+
+//    private val _saveExpenseState = MutableStateFlow< UiState<String>>(UiState.Idle)
+//    val saveExpenseState = _saveExpenseState
+//
+//    fun saveExpensesLocally(){
+//        viewModelScope.launch {
+//            val result = repository.getExpenses(1,20)
+//            when(result){
+//                is UiState.Loading->{
+//                    _saveExpenseState.value = UiState.Loading
+//                }
+//
+//                is UiState.Success ->{
+//                    repository.saveExpensesLocally(result.data.data.expenses.toEntityListExpenses())
+//                    _saveExpenseState.value =
+//                        UiState.Success("Expenses sync successfully" )
+//
+//                }
+//                is UiState.Error ->{
+//                    _saveExpenseState.value =
+//                        UiState.Error(result.message)
+//
+//
+//
+//                }
+//
+//                else -> {}
+//            }
+//
+//        }
+//    }
 
 
 

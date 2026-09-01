@@ -1,7 +1,6 @@
 package com.example.expense
 
 import android.Manifest
-import android.animation.ObjectAnimator
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
@@ -9,63 +8,66 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.view.WindowInsetsController
-import android.view.animation.AccelerateInterpolator
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.animation.doOnEnd
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsControllerCompat
+import androidx.navigation.fragment.NavHostFragment
+import com.example.expense.core.util.OnboardingPrefs
 import com.example.expense.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var onboardingPrefs: OnboardingPrefs
 
     private lateinit var b: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
+
         val data = intent?.data
         Log.d("DeepLink", data.toString())
+        val prefs = getSharedPreferences("settings", MODE_PRIVATE)
+        val isDark = prefs.getBoolean("dark_mode", true)
+
         WindowCompat.setDecorFitsSystemWindows(window, false)
         window.statusBarColor = Color.TRANSPARENT
         window.navigationBarColor = Color.TRANSPARENT
-//        window.statusBarColor = android.graphics.Color.TRANSPARENT
-//        window.navigationBarColor = android.graphics.Color.TRANSPARENT
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            window.insetsController?.setSystemBarsAppearance(
-                0,
-                WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
-            )
+        WindowInsetsControllerCompat(window, window.decorView).apply {
+            isAppearanceLightStatusBars = !isDark
+            isAppearanceLightNavigationBars = !isDark
         }
 
         b = ActivityMainBinding.inflate(layoutInflater)
         setContentView(b.root)
 
-        // ✅ Dismiss instantly — hand off to SplashFragment
+        // activity_main.xml has no static app:navGraph - building and assigning the graph
+        // here, before it's ever set on the NavController, means splashFragment2 is never
+        // instantiated at all (it would only be created if it were the start destination).
+        // Onboarding (welcomeFragment onward) now lives in this same graph/Activity instead
+        // of a separate OnboardingActivity - see "Splash screen" in CLAUDE.md for why a
+        // second Activity meant a second, jarring system splash flash on first run.
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.navHostFragment) as NavHostFragment
+        val navController = navHostFragment.navController
+        val navGraph = navController.navInflater.inflate(R.navigation.nav_graph)
+        navGraph.setStartDestination(
+            if (onboardingPrefs.isOnboardingComplete()) R.id.dashboardFragment else R.id.welcomeFragment
+        )
+        navController.graph = navGraph
+
+        // ✅ Dismiss instantly, no custom exit animation - nothing branded underneath to
+        // slide-reveal into anymore, so an instant removal reads cleaner than animating.
         splashScreen.setKeepOnScreenCondition { false }
-
-        // ✅ Purple screen slides up revealing SplashFragment underneath
-        splashScreen.setOnExitAnimationListener { splashProvider ->
-            val slideUp = ObjectAnimator.ofFloat(
-                splashProvider.view,
-                View.TRANSLATION_Y,
-                0f,
-                -splashProvider.view.height.toFloat()
-            )
-            slideUp.duration = 300
-            slideUp.interpolator = AccelerateInterpolator()
-            slideUp.doOnEnd { splashProvider.remove() }
-            slideUp.start()
-        }
-
-        val prefs = getSharedPreferences("settings", MODE_PRIVATE)
-        val isDark = prefs.getBoolean("dark_mode", false)
+        splashScreen.setOnExitAnimationListener { splashProvider -> splashProvider.remove() }
 
         if (isDark) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
@@ -73,13 +75,23 @@ class MainActivity : AppCompatActivity() {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         }
 
-        // onCreate mein
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS)
+        // SMS auto-detect disabled for Play Store release (see AndroidManifest.xml note)
+        // if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS)
+        //     != PackageManager.PERMISSION_GRANTED) {
+        //     ActivityCompat.requestPermissions(
+        //         this,
+        //         arrayOf(Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_SMS),
+        //         101
+        //     )
+        // }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
             != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(
                 this,
-                arrayOf(Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_SMS),
-                101
+                arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                102
             )
         }
     }

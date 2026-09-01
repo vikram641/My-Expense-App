@@ -10,5 +10,5 @@ data class ExpenseXX(
     val date: String,
     val id: String,
     val note: String,
-    val receiptUrl: String
+    val receiptUrl: String?
 )

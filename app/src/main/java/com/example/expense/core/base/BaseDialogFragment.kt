@@ -19,6 +19,8 @@ abstract class BaseDialogFragment<VB : ViewBinding> : DialogFragment() {
 
     abstract fun setup()
 
+    protected open val allowBackPress: Boolean = false
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = Dialog(requireContext())
 
@@ -28,7 +30,7 @@ abstract class BaseDialogFragment<VB : ViewBinding> : DialogFragment() {
         dialog.setCanceledOnTouchOutside(false)
 
         dialog.setOnKeyListener { _, keyCode, event ->
-            if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP) {
+            if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP && !allowBackPress) {
                 // do nothing OR show toast
                 true // consume event (block back press)
             } else {

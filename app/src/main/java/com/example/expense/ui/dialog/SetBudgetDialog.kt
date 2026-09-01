@@ -81,10 +81,14 @@ class SetBudgetDialog(
                 return@setOnClickListener
             }
 
-
+            val limitAmount = amount.toIntOrNull()
+            if (limitAmount == null || limitAmount <= 0) {
+                binding.etAmount.error = "Enter a valid amount"
+                return@setOnClickListener
+            }
 
             val request = SetBudgetRequest(categoryId = selectedCategory!!,
-                limitAmount = amount.toInt(),
+                limitAmount = limitAmount,
                 month = apiMonth.toString(),
                 currency = "INR")
 

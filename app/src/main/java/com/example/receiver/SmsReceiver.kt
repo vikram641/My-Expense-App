@@ -109,7 +109,7 @@ class SmsReceiver : BroadcastReceiver() {
         val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
 
         val request = AddExpenseRequest(
-            amount = amount,
+            amount = amount.toString(),
             categoryId = "cat_e6ee396f-d4a1-48cf-bee1-783e101e8524",       // default empty — user baad mein edit kar sakta hai
             currency = "INR",
             date = currentDate,
@@ -118,7 +118,7 @@ class SmsReceiver : BroadcastReceiver() {
         )
 
         CoroutineScope(Dispatchers.IO).launch {
-            val result = repository.addExpense(request)
+            val result = repository.addExpense(request.apply { this.amount.toInt() })
             // Success hone par notification dikhao
             // Check karo switch on hai ya nahi
             val isNotificationEnabled = context

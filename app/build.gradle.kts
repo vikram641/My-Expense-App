@@ -1,13 +1,44 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.hilt)
+
+    // Add the Google services Gradle plugin
+    id("com.google.gms.google-services")
+}
+
+val keystoreProperties = Properties().apply {
+    val file = rootProject.file("keystore.properties")
+    if (file.exists()) {
+        file.inputStream().use { load(it) }
+    }
+}
+
+val localProperties = Properties().apply {
+    val file = rootProject.file("local.properties")
+    if (file.exists()) {
+        file.inputStream().use { load(it) }
+    }
 }
 
 android {
     namespace = "com.example.expense"
-    compileSdk = 34
+    compileSdk = 35
+
+    signingConfigs {
+        create("release") {
+            if (keystoreProperties.containsKey("storeFile")) {
+                storeFile = file(keystoreProperties["storeFile"] as String)
+                storePassword = keystoreProperties["storePassword"] as String
+                keyAlias = keystoreProperties["keyAlias"] as String
+                keyPassword = keystoreProperties["keyPassword"] as String
+            }
+        }
+    }
+
     buildTypes {
         debug {
             isDebuggable = true
@@ -15,7 +46,9 @@ android {
 
         release {
             isDebuggable = false
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
+            signingConfig = signingConfigs.getByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -23,12 +56,17 @@ android {
         }
     }
     defaultConfig {
-        applicationId = "com.example.expense"
+        applicationId = "com.vikram641.expensetracker"
         minSdk = 24
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        targetSdk = 35
+        versionCode = 5
+        versionName = "1.1"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // Ask FixMoney's second AI fallback tier (after Gemini's free-tier quota) -
+        // add GROQ_API_KEY=gsk_... to local.properties (already gitignored, never
+        // committed); empty string is the safe default when it's not set yet.
+        buildConfigField("String", "GROQ_API_KEY", "\"${localProperties.getProperty("GROQ_API_KEY", "")}\"")
     }
 
 //    buildTypes {
@@ -87,6 +125,7 @@ dependencies {
 
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
 
     // Hilt
     implementation(libs.hilt.android)
@@ -126,6 +165,30 @@ dependencies {
     implementation("com.airbnb.android:lottie:6.4.0")
 
     implementation("com.github.Dimezis:BlurView:version-2.0.4")
+
+    //jwt decoder
+    implementation("com.auth0.android:jwtdecode:2.0.2")
+
+    // Import the Firebase BoM
+    implementation(platform("com.google.firebase:firebase-bom:34.18.0"))
+
+    // TODO: Add the dependencies for Firebase products you want to use
+    // When using the BoM, don't specify versions in Firebase dependencies
+    implementation("com.google.firebase:firebase-analytics")
+    implementation ( "com.google.firebase:firebase-messaging")
+
+    // CameraX (receipt scanner camera capture)
+    implementation(libs.androidx.camera.core)
+    implementation(libs.androidx.camera.camera2)
+    implementation(libs.androidx.camera.lifecycle)
+    implementation(libs.androidx.camera.view)
+
+    // Firebase AI Logic (Gemini) - multimodal receipt field extraction
+    implementation("com.google.firebase:firebase-ai")
+
+    // Firestore - categories source (replaces the categories REST endpoint, which
+    // requires a login token that's unavailable while the app runs offline)
+    implementation("com.google.firebase:firebase-firestore")
 
 }
 

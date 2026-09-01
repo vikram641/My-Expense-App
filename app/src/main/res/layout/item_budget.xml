@@ -38,6 +38,17 @@
         app:layout_constraintEnd_toStartOf="@id/tvAmount"
         app:layout_constraintTop_toTopOf="@id/imgIcon"/>
 
+    <!-- Delete -->
+    <ImageView
+        android:id="@+id/imgDelete"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:padding="2dp"
+        android:src="@drawable/ic_delete"
+        android:contentDescription="@null"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/imgIcon"/>
+
     <!-- Amount -->
     <TextView
         android:id="@+id/tvAmount"
@@ -47,7 +58,7 @@
         android:textColor="#FFA500"
         android:textSize="14sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/imgDelete"
         app:layout_constraintTop_toTopOf="@id/imgIcon"/>
 
     <!-- Progress -->

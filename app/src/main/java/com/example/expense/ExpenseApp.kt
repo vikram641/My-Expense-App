@@ -42,7 +42,7 @@ class ExpenseApp : Application(), Configuration.Provider {
         // Clear all session cache flags so data is re-fetched on each app launch
         sessionCacheManager.startNewSession()
         // Schedule periodic background sync + an immediate one-time sync
-        SyncWorker.enqueuePeriodic(this)
-        SyncWorker.enqueueOneTime(this)
+//        SyncWorker.enqueuePeriodic(this)
+//        SyncWorker.enqueueOneTime(this)
     }
 }

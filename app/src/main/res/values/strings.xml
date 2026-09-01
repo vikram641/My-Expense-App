@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Budget Tracker</string>
+    <string name="app_name">FixMoney</string>
 
     <!-- Home screen -->
     <string name="greeting">Good morning, %1$s</string>
@@ -52,5 +52,8 @@
     <string name="hint_search_expenses">Search Expenses</string>
     <string name="section_today">TODAY</string>
     <string name="section_yesterday">YESTERDAY</string>
+
+    <!-- Onboarding -->
+    <string name="action_back">Back</string>
 
 </resources>

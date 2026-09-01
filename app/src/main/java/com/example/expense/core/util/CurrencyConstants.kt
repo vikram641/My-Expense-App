@@ -23,4 +23,11 @@ object CurrencyConstants {
 
     fun getDisplayForCode(code: String): String =
         CURRENCIES.firstOrNull { it.startsWith("$code ") } ?: code
+
+    fun getSymbol(code: String): String =
+        try {
+            java.util.Currency.getInstance(code).symbol
+        } catch (e: IllegalArgumentException) {
+            code
+        }
 }

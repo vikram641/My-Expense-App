@@ -10,6 +10,10 @@ import com.example.expense.data.api.ExpenseInterface
 import com.example.expense.data.api.HomeApiInterface
 import com.example.expense.core.network.AuthInterceptor
 import com.example.expense.core.util.AppENUM
+import com.example.expense.data.api.DataSyncApiInterface
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.firestore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -113,5 +117,17 @@ object NetworkModule {
             .build()
             .create(BudgetInterface::class.java)
     }
+    @Singleton
+    @Provides
+    fun syncApi(retrofitBuilder: Retrofit.Builder, okHttpClient: OkHttpClient): DataSyncApiInterface {
+        return retrofitBuilder
+            .client(okHttpClient)
+            .build()
+            .create(DataSyncApiInterface::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideFirestore(): FirebaseFirestore = Firebase.firestore
 
 }

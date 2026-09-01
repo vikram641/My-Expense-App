@@ -8,6 +8,7 @@ import com.example.expense.data.local.SyncResult
 import com.example.expense.data.model.ApiResponse
 import com.example.expense.data.model.BudgetData
 import com.example.expense.data.model.CatDataResponse
+import com.example.expense.data.model.ExpenseSummaryResponse
 import com.example.expense.data.model.SetBudgetRequest
 import com.example.expense.data.repository.Repository
 import com.example.expense.core.UiState
@@ -30,11 +31,17 @@ class BudgetViewModel @Inject constructor(
     private val _budgetState = MutableStateFlow<UiState<ApiResponse<List<BudgetData>>>>(UiState.Idle)
     val budgetState = _budgetState
 
+    private val _summaryState = MutableStateFlow<UiState<ExpenseSummaryResponse>>(UiState.Idle)
+    val summaryState: StateFlow<UiState<ExpenseSummaryResponse>> = _summaryState
+
     private val _categoryState = MutableStateFlow<UiState<ApiResponse<List<CatDataResponse>>>>(UiState.Idle)
     val categoryState = _categoryState
 
-    private val _setBudgetResult = MutableStateFlow<OperationResult?>(null)
-    val setBudgetResult: StateFlow<OperationResult?> = _setBudgetResult
+    private val _setBudgetResult = MutableStateFlow<UiState<String>>(UiState.Idle)
+    val setBudgetResult: StateFlow<UiState<String>> = _setBudgetResult
+
+    private val _deleteBudgetResult = MutableStateFlow<UiState<String>>(UiState.Idle)
+    val deleteBudgetResult: StateFlow<UiState<String>> = _deleteBudgetResult
 
     private val _syncResult = MutableStateFlow<SyncResult?>(null)
     val syncResult: StateFlow<SyncResult?> = _syncResult
@@ -56,6 +63,17 @@ class BudgetViewModel @Inject constructor(
     }
 
     /**
+     * Fetches the overall totalBudget/totalSpent summary for [month], used to
+     * populate the overall budget card.
+     */
+    fun getSummary(month: String?, forceRefresh: Boolean = false) {
+        viewModelScope.launch {
+            _summaryState.value = UiState.Loading
+            _summaryState.value = repository.getSummary(month, forceRefresh)
+        }
+    }
+
+    /**
      * Fetches categories once per session (cached in Room after first call).
      */
     fun getExpenseCat(forceRefresh: Boolean = false) {
@@ -73,8 +91,14 @@ class BudgetViewModel @Inject constructor(
     fun setBudget(request: SetBudgetRequest) {
         viewModelScope.launch {
             _setBudgetResult.value = repository.setBudgetOfflineFirst(request)
-            // Trigger an immediate sync attempt in case we're online
-            SyncWorker.enqueueOneTime(context)
+
+
+        }
+    }
+
+    fun deleteBudget(categoryId: String, month: String) {
+        viewModelScope.launch {
+            _deleteBudgetResult.value = repository.deleteBudget(categoryId, month)
         }
     }
 

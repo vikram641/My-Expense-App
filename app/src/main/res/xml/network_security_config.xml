@@ -17,6 +17,8 @@
         <domain includeSubdomains="true">192.168.0.116</domain>
         <domain includeSubdomains="true">expense-app-backend-91yj.onrender.com</domain>
 
+        <domain includeSubdomains="true">192.168.0.114</domain>
+
 
 
         <!--        <domain includeSubdomains="true">172.16.19.183</domain>-->

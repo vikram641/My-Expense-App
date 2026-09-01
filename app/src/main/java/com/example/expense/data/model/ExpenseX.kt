@@ -1,7 +1,7 @@
 package com.example.expense.data.model
 
 data class ExpenseX(
-    val amount: Int,
+    val amount: String,
     val category: CategoryX,
     val createdAt: String,
     val currency: String,
@@ -9,5 +9,6 @@ data class ExpenseX(
     val id: String,
     val note: String,
     val receiptUrl: String,
-    val updatedAt: String
+    val updatedAt: String,
+    val userId : String = ""
 )

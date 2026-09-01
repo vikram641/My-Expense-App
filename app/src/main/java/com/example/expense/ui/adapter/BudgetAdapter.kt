@@ -4,14 +4,18 @@ import android.animation.ObjectAnimator
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Adapter
+import com.example.expense.R
 import com.example.expense.core.base.BaseAdapter
 import com.example.expense.core.util.Utils
 import com.example.expense.data.model.BudgetData
 import com.example.expense.databinding.ItemBudgetBinding
+import com.example.expense.ui.adapter.ExpenseAdapter.ExpenseViewHolder
 import javax.inject.Inject
 
 class BudgetAdapter (private val utils: Utils):
     BaseAdapter<BudgetData, ItemBudgetBinding>() {
+
+    var onDeleteClick: ((BudgetData, Int) -> Unit)? = null
 
     override fun inflateBinding(
         inflater: LayoutInflater,
@@ -24,6 +28,18 @@ class BudgetAdapter (private val utils: Utils):
         position: Int
     ) {
         binding.tvCategory.text = item.categoryName
+
+
+        val resId = binding.root.context.resources.getIdentifier(
+            item.categoryIcon,
+            "drawable",
+            binding.root.context.packageName
+        )
+
+        binding.imgIcon.setImageResource(
+            if (resId != 0) resId else R.drawable.ic_transport
+        )
+
         binding.tvAmount.text = "₹${item.spentAmount}/₹${item.limitAmount}"
 
         val percentage = utils.calculatePercentage(item.spentAmount,item.limitAmount)
@@ -55,5 +71,9 @@ class BudgetAdapter (private val utils: Utils):
 
         animator.duration = 800
         animator.start()
+
+        binding.imgDelete.setOnClickListener {
+            onDeleteClick?.invoke(item, position)
+        }
     }
 }

@@ -9,7 +9,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.ProgressBar
+import androidx.core.text.buildSpannedString
+import androidx.core.text.color
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -28,7 +31,9 @@ import com.github.mikephil.charting.data.PieEntry
 import com.example.expense.core.util.AvatarManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Locale
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -69,6 +74,11 @@ class HomeFragment : Fragment() {
             findNavController().navigate(R.id.action_dashboardFragment_to_editProfileFragment)
         }
 
+        b.btnAskAi.setOnClickListener {
+            findNavController().navigate(R.id.action_dashboardFragment_to_chatFragment)
+        }
+
+
         homeViewModel.checkNetwork()
         homeViewModel.userProfileDetail()
 
@@ -77,6 +87,7 @@ class HomeFragment : Fragment() {
             homeViewModel.isOffline.collect { offline ->
                 b.tvOfflineBanner.visibility = if (offline) View.VISIBLE else View.GONE
             }
+
         }
 
         // Observe initials to refresh avatar (emoji takes priority)
@@ -87,6 +98,10 @@ class HomeFragment : Fragment() {
 
         homeViewModel.getSummary()
         homeViewModel.getWeeklySummary()
+        homeViewModel.loadInsight()
+//        homeViewModel.saveExpensesLocally()
+
+        homeViewModel.insight.observe(viewLifecycleOwner) { renderInsight(it) }
 
         observerState()
         legendAdapter = LegendAdapter(emptyList()) // initially empty
@@ -96,6 +111,9 @@ class HomeFragment : Fragment() {
             adapter = legendAdapter
         }
 
+        // Recent-list section (rvRecent) is disabled for now - see fragment_home.xml,
+        // where the RecyclerView is commented out; recentHeaderRow stays permanently
+        // gone with no code driving its visibility.
 
         // ✅ Pull to refresh
         b.swipeRefresh.apply {
@@ -107,26 +125,26 @@ class HomeFragment : Fragment() {
             }
         }
 
-        // ✅ FAB hide on scroll down, show on scroll up
-        b.nestedScroll.setOnScrollChangeListener(
-            NestedScrollView.OnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
-                if (scrollY > oldScrollY + 10) {
-                    // Scrolling DOWN — hide FAB
-                    b.fabAdd.animate()
-                        .scaleX(0f).scaleY(0f)
-                        .alpha(0f)
-                        .setDuration(200)
-                        .start()
-                } else if (scrollY < oldScrollY - 10) {
-                    // Scrolling UP — show FAB
-                    b.fabAdd.animate()
-                        .scaleX(1f).scaleY(1f)
-                        .alpha(1f)
-                        .setDuration(200)
-                        .start()
-                }
-            }
-        )
+//        // ✅ FAB hide on scroll down, show on scroll up
+//        b.nestedScroll.setOnScrollChangeListener(
+//            NestedScrollView.OnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
+//                if (scrollY > oldScrollY + 10) {
+//                    // Scrolling DOWN — hide FAB
+//                    b.fabAdd.animate()
+//                        .scaleX(0f).scaleY(0f)
+//                        .alpha(0f)
+//                        .setDuration(200)
+//                        .start()
+//                } else if (scrollY < oldScrollY - 10) {
+//                    // Scrolling UP — show FAB
+//                    b.fabAdd.animate()
+//                        .scaleX(1f).scaleY(1f)
+//                        .alpha(1f)
+//                        .setDuration(200)
+//                        .start()
+//                }
+//            }
+//        )
 
         b.tvDate.setOnClickListener {
             val DilogFragment = homeViewModel.getYearMonth()
@@ -134,9 +152,9 @@ class HomeFragment : Fragment() {
 
         }
 
-        b.fabAdd.setOnClickListener {
-            findNavController().navigate(R.id.action_dashboardFragment_to_addExpenseFragment)
-        }
+//        b.fabAdd.setOnClickListener {
+//            findNavController().navigate(R.id.action_dashboardFragment_to_addExpenseFragment)
+//        }
 
 
     }
@@ -156,6 +174,57 @@ class HomeFragment : Fragment() {
             b.avatar.text = initials
             b.avatar.textSize = 14f
         }
+    }
+
+    private fun renderInsight(insight: HomeInsight?) {
+        if (insight == null) {
+            b.aiInsightCard.visibility = View.GONE
+            return
+        }
+        b.aiInsightCard.visibility = View.VISIBLE
+
+        b.tvInsightMain.text = if (insight.hasCategoryTrend) {
+            buildSpannedString {
+                append("${insight.categoryName} spending is up ")
+                color(resources.getColor(R.color.text_warning, null)) {
+                    append("${insight.categoryPercentChange}%")
+                }
+                append(" this week vs your average")
+            }
+        } else {
+            "You're on track to exceed your budget this month"
+        }
+
+        if (insight.hasForecast) {
+            val dateLabel = formatDayLabel(insight.projectedOverageDay!!)
+            b.tvInsightForecast.visibility = View.VISIBLE
+            b.tvInsightForecast.text = "On track to exceed budget by $dateLabel at this pace"
+            b.insightForecastBar.visibility = View.VISIBLE
+            b.tvInsightToday.visibility = View.VISIBLE
+            b.tvInsightOverageLabel.visibility = View.VISIBLE
+            b.tvInsightOverageLabel.text = "Projected overage · $dateLabel"
+
+            val monthFraction = insight.monthProgressFraction.coerceIn(0.02f, 0.96f)
+            val overageFraction = (insight.overageFraction ?: monthFraction)
+                .coerceIn(monthFraction + 0.02f, 0.98f)
+
+            (b.insightFillToday.layoutParams as LinearLayout.LayoutParams).weight = monthFraction
+            (b.insightFillWarningZone.layoutParams as LinearLayout.LayoutParams).weight =
+                overageFraction - monthFraction
+            (b.insightFillRemainder.layoutParams as LinearLayout.LayoutParams).weight = 1f - overageFraction
+            b.insightForecastBar.requestLayout()
+        } else {
+            b.tvInsightForecast.visibility = View.GONE
+            b.insightForecastBar.visibility = View.GONE
+            b.tvInsightToday.visibility = View.GONE
+            b.tvInsightOverageLabel.visibility = View.GONE
+        }
+    }
+
+    private fun formatDayLabel(dayOfMonth: Int): String {
+        val cal = Calendar.getInstance()
+        cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+        return SimpleDateFormat("MMM d", Locale.getDefault()).format(cal.time)
     }
 
     private fun showLoading(show: Boolean) {
@@ -185,6 +254,7 @@ class HomeFragment : Fragment() {
         }
 
         lifecycleScope.launch {
+
             homeViewModel.homeState.collect {state ->
                 when(state){
                     is UiState.Idle ->{
@@ -198,7 +268,7 @@ class HomeFragment : Fragment() {
                         showLoading(false)
                     }
                     is UiState.Success ->{
-                        kotlinx.coroutines.delay(2000)
+//                        kotlinx.coroutines.delay(2000)
                         showLoading(false)
                         legendAdapter = LegendAdapter(state.data.data.byCategory)
                         b.rvLegend.adapter = legendAdapter
@@ -209,7 +279,7 @@ class HomeFragment : Fragment() {
                             pieEntries.add(PieEntry(item.percentage.toFloat(), ""))
 
 
-                            colors.add(Color.parseColor(item.categoryColor))
+                            colors.add(Color.parseColor(item.categoryColor ))
                         }
                         val dataSet = PieDataSet(pieEntries, "")
                         dataSet.setDrawValues(false)

@@ -19,3 +19,15 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# --- Gson / Retrofit models ---
+# Most data.model classes are matched by Gson via reflection on field names, not
+# @SerializedName, so R8 field renaming would silently break (de)serialization.
+-keepattributes Signature
+-keepattributes *Annotation*
+-keep class com.example.expense.data.model.** { *; }
+-keep class com.example.expense.data.local.** { *; }
+-keepclassmembers,allowobfuscation class * {
+    @com.google.gson.annotations.SerializedName <fields>;
+}
+-dontwarn sun.misc.**

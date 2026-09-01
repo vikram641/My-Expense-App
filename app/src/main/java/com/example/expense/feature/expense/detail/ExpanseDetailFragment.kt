@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -15,6 +16,8 @@ import com.example.expense.core.base.BaseFragment
 import com.example.expense.databinding.FragmentExpanseDetailBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 @AndroidEntryPoint
 class ExpanseDetailFragment : BaseFragment<FragmentExpanseDetailBinding>() {
@@ -35,6 +38,15 @@ class ExpanseDetailFragment : BaseFragment<FragmentExpanseDetailBinding>() {
 
         binding.btnBack.setOnClickListener { findNavController().navigateUp() }
 
+        val goToEdit = {
+            findNavController().navigate(
+                R.id.action_expanseDetailFragment_to_addExpenseFragment,
+                bundleOf("expenseId" to expenseId)
+            )
+        }
+        binding.btnEdit.setOnClickListener { goToEdit() }
+        binding.btnEditAction.setOnClickListener { goToEdit() }
+
         binding.btnDelete.setOnClickListener {
             AlertDialog.Builder(requireContext())
                 .setTitle("Delete Expense")
@@ -45,6 +57,12 @@ class ExpanseDetailFragment : BaseFragment<FragmentExpanseDetailBinding>() {
                 .setNegativeButton("Cancel", null)
                 .show()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Re-fetch on return from the edit screen so changes are reflected.
+        expenseId?.let { viewModel.getExpenseDetail(it) }
     }
 
     override fun observeState() {
@@ -58,10 +76,12 @@ class ExpanseDetailFragment : BaseFragment<FragmentExpanseDetailBinding>() {
                         binding.tvAmount.text = "-₹${expense.amount}"
                         binding.tvDesc.text = expense.note
                         binding.tvTag.text = expense.category.name
-                        binding.tvDate.text = expense.date
+                        binding.tvDate.text = formatDisplayDate(expense.date)
                         binding.tvCategory.text = expense.category.name
                         binding.tvCurrency.text = expense.currency
-                        binding.tvCreatedAt.text = expense.createdAt ?: ""
+                        binding.tvCreatedAt.text = formatDisplayDate(
+                            expense.createdAt.ifBlank { expense.date }
+                        )
 
                         val resId = requireContext().resources.getIdentifier(
                             expense.category.icon, "drawable", requireContext().packageName
@@ -111,5 +131,16 @@ class ExpanseDetailFragment : BaseFragment<FragmentExpanseDetailBinding>() {
     private fun showLoading(show: Boolean) {
         binding.btnDelete.isEnabled = !show
         binding.btnEditAction.isEnabled = !show
+        binding.btnEdit.isEnabled = !show
+    }
+
+    private fun formatDisplayDate(raw: String): String {
+        return try {
+            val parser = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val formatter = SimpleDateFormat("MMMM d, yyyy", Locale.getDefault())
+            formatter.format(parser.parse(raw)!!)
+        } catch (e: Exception) {
+            raw
+        }
     }
 }

@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
+import android.content.res.Resources
 import android.os.Build
 import android.text.TextUtils
 import android.util.Log
@@ -31,6 +32,8 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.YearMonth
 import kotlin.math.roundToInt
+import kotlin.time.Duration.Companion.milliseconds
+
 
 
 class Utils @Inject constructor() {
@@ -57,9 +60,11 @@ class Utils @Inject constructor() {
 
     fun validateExpenseInput(request: AddExpenseRequest): Pair<Boolean, String> {
 
+        Log.d("result", request.categoryId)
+
         return when {
-//            request.amount <= 0 ->
-//                Pair(false, "Enter valid amount")
+            request.amount.isBlank() ->
+                Pair(false, "Enter valid amount")
 
             request.categoryId.isBlank() ->
                 Pair(false, "Select category")
@@ -79,44 +84,32 @@ class Utils @Inject constructor() {
     }
     companion object {
 
-        fun showDateTimePicker(
+        fun showDatePicker(
             context: Context,
             onDateSelected: (String) -> Unit
         ) {
+
             val calendar = Calendar.getInstance()
 
-            val datePickerDialog = DatePickerDialog(
+            val dialog = DatePickerDialog(
                 context,
-                { _, year, month, day ->
+                { _, year, month, dayOfMonth ->
 
-                    val timePickerDialog = TimePickerDialog(
-                        context,
-                        { _, hour, minute ->
-
-                            val selectedCalendar = Calendar.getInstance()
-                            selectedCalendar.set(year, month, day, hour, minute)
-
-                            val format = SimpleDateFormat(
-                                "yyy-MM-dd, hh:mm a",
-                                Locale.getDefault()
-                            )
-
-                            onDateSelected(format.format(selectedCalendar.time))
-                        },
-                        calendar.get(Calendar.HOUR_OF_DAY),
-                        calendar.get(Calendar.MINUTE),
-                        false
+                    val selectedDate = String.format(
+                        "%04d-%02d-%02d",
+                        year,
+                        month + 1,
+                        dayOfMonth
                     )
 
-                    timePickerDialog.show()
+                    onDateSelected(selectedDate)
                 },
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH)
             )
 
-            datePickerDialog.datePicker.minDate = System.currentTimeMillis()
-            datePickerDialog.show()
+            dialog.show()
         }
     }
 //    @RequiresApi(Build.VERSION_CODES.O)
@@ -197,6 +190,7 @@ class Utils @Inject constructor() {
                 UiState.Success(response.body()!!)
             } else {
                 UiState.Error(response.message())
+
             }
 
         } catch (e: Exception) {
@@ -326,6 +320,11 @@ class Utils @Inject constructor() {
         else ((value.toFloat() / total.toFloat()) * 100).roundToInt()
     }
 
+    fun percentage(value: Int, total: Int): Int {
+        return if (total == 0) 0
+        else ((value.toFloat() / total.toFloat()) * 100).roundToInt()
+    }
+
 
 
     fun getCurrentMonthFormats(): Map<String, String> {
@@ -360,6 +359,8 @@ class Utils @Inject constructor() {
             Action.DECREASE -> yearMonth.minusMonths(value)
         }.format(formatter)
     }
+
+
 
 
 

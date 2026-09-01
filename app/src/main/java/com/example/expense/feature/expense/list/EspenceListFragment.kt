@@ -14,7 +14,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.expense.R
-import com.example.expense.core.UiState
 import com.example.expense.core.util.Utils
 import com.example.expense.databinding.FragmentEspenceListBinding
 import com.example.expense.ui.adapter.ExpenseAdapter
@@ -65,15 +64,6 @@ class EspenceListFragment : Fragment() {
             }
         }
 
-//
-//        expensesViewModel.getExpensesSearch(ExpenseQuery(page = 1, limit = 10))
-//        b.chipFood.setOnClickListener { expensesViewModel.getExpensesSearch(ExpenseQuery(page = 1, limit = 20, category = "Food")) }
-//        b.chipTransport.setOnClickListener { expensesViewModel.getExpensesSearch(ExpenseQuery(page = 1, limit = 20, category = "Transport")) }
-//        b.chipBills.setOnClickListener { expensesViewModel.getExpensesSearch(ExpenseQuery(page = 1, limit = 20, category = "Bills")) }
-//        b.chipAll.setOnClickListener { expensesViewModel.getExpensesSearch(ExpenseQuery(page = 1, limit = 20)) }
-        // Seed cache from network; display always comes from local cache
-        expensesViewModel.refresh()
-
         b.chipGroup.isSingleSelection = true
         b.chipGroup.check(R.id.chipAll)
 
@@ -100,35 +90,14 @@ class EspenceListFragment : Fragment() {
         observeState()
 
     }
-    private fun showLoading(show: Boolean) {
-        if (show) {
-            b.loaderLayout.visibility = View.VISIBLE
-            b.lottieProgress.playAnimation()
-        } else {
-            b.lottieProgress.cancelAnimation()
-            b.loaderLayout.visibility = View.GONE
-        }
-    }
-
     @RequiresApi(Build.VERSION_CODES.O)
     private fun observeState() {
-        // Primary: always show cached/filtered data — works offline
         lifecycleScope.launch {
             expensesViewModel.displayExpenses.collect { expenses ->
                 val sectionedList = utils.mapExpenses(expenses)
                 expenseAdapter.submitList(sectionedList)
-            }
-        }
-
-        // Secondary: loading/error indicator from network refresh
-        lifecycleScope.launch {
-            expensesViewModel.refreshState.collect { state ->
-                when (state) {
-                    is UiState.Loading -> showLoading(true)
-                    is UiState.Success -> showLoading(false)
-                    is UiState.Error   -> showLoading(false) // cached data still visible
-                    is UiState.Idle    -> {}
-                }
+                b.emptyStateLayout.visibility = if (expenses.isEmpty()) View.VISIBLE else View.GONE
+                b.rvExpenses.visibility = if (expenses.isEmpty()) View.GONE else View.VISIBLE
             }
         }
     }

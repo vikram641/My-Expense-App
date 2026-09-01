@@ -1,6 +1,7 @@
 package com.example.expense.feature.budget
 
 import com.example.expense.R
+import android.app.AlertDialog
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -24,7 +25,6 @@ import com.example.expense.core.util.Utils
 import com.example.expense.data.model.CatDataResponse
 import com.example.expense.data.model.SetBudgetRequest
 import com.example.expense.core.UiState
-import com.example.expense.data.local.OperationResult
 import com.example.expense.databinding.FragmentBudgetBinding
 import com.example.expense.ui.dialog.MonthYearPickerDialog
 import dagger.hilt.android.AndroidEntryPoint
@@ -43,6 +43,8 @@ class BudgetFragment : BaseFragment<FragmentBudgetBinding>() {
 
     private var categoriesList: List<CatDataResponse> = emptyList()
 
+    lateinit var currentDate: String
+
 
     override fun inflateBinding(
         inflater: LayoutInflater,
@@ -60,16 +62,18 @@ class BudgetFragment : BaseFragment<FragmentBudgetBinding>() {
 
         binding.tvMonth.text = apiMonth
 
-        var currentDate = apiMonth
+        currentDate = apiMonth?: ""
 
         fun updateBudgetMonth(action: Utils.Action) {
             currentDate = utils.updateMonth(currentDate, action)
             binding.tvMonth.text = currentDate
             budgetViewModel.getBudgets(currentDate)
+            budgetViewModel.getSummary(currentDate)
         }
 
         // Initial API call
         budgetViewModel.getBudgets(currentDate)
+        budgetViewModel.getSummary(currentDate)
 
         binding.btnNext.setOnClickListener {
             updateBudgetMonth(Utils.Action.INCREASE)
@@ -90,7 +94,7 @@ class BudgetFragment : BaseFragment<FragmentBudgetBinding>() {
             DilogFragment.show(childFragmentManager, "MonthYearPicker")
 
         }
-        budgetViewModel.getExpenseCat()
+        budgetViewModel.getExpenseCat(true)
         binding.tvSetBudget.setOnClickListener {
             showBlur()
 
@@ -110,6 +114,7 @@ class BudgetFragment : BaseFragment<FragmentBudgetBinding>() {
 
                         budgetViewModel.setBudget(state.data)
 
+
                     }
                 }
             }.show(parentFragmentManager, "budget_dialog")
@@ -119,6 +124,12 @@ class BudgetFragment : BaseFragment<FragmentBudgetBinding>() {
 
         setupRecycler()
         observeState()
+    }
+    override fun onResume() {
+        budgetViewModel.getBudgets(currentDate)
+        budgetViewModel.getSummary(currentDate)
+        super.onResume()
+
     }
     fun getYearMonth(): MonthYearPickerDialog{
         val calendar = Calendar.getInstance()
@@ -138,6 +149,7 @@ class BudgetFragment : BaseFragment<FragmentBudgetBinding>() {
                 )[month]
 
                 budgetViewModel.getBudgets("$year$monthName")
+                budgetViewModel.getSummary("$year$monthName")
                 binding.tvMonth.text = "$year$monthName"
 
             }
@@ -173,13 +185,47 @@ class BudgetFragment : BaseFragment<FragmentBudgetBinding>() {
         lifecycleScope.launch {
             budgetViewModel.setBudgetResult.collect { result ->
                 when (result) {
-                    OperationResult.Queued -> showToast("Budget saved offline — will sync when online")
-                    OperationResult.Synced -> {
+                    is UiState.Success -> {
                         showToast("Budget saved")
-                        budgetViewModel.getBudgets(binding.tvMonth.text.toString(), forceRefresh = true)
+                        val month = binding.tvMonth.text.toString()
+                        budgetViewModel.getBudgets(month, forceRefresh = true)
+                        budgetViewModel.getSummary(month, forceRefresh = true)
                     }
-                    is OperationResult.Failed -> showToast("Error: ${result.message}")
-                    null -> Unit
+                    is UiState.Error -> showToast("Error: ${result.message}")
+                    UiState.Idle -> {}
+                    UiState.Loading -> {}
+                }
+            }
+        }
+        lifecycleScope.launch {
+            budgetViewModel.summaryState.collect { state ->
+                when (state) {
+                    is UiState.Error -> {}
+                    UiState.Idle -> {}
+                    UiState.Loading -> {}
+                    is UiState.Success -> {
+                        val totalBudget = state.data.data.totalBudget
+                        val totalSpent = state.data.data.totalSpent
+
+                        if (totalBudget == 0) {
+                            binding.tvPercent.visibility = View.GONE
+                            binding.progressOverall.visibility = View.GONE
+                            binding.tvSpent.visibility = View.GONE
+
+                            binding.tvEmptyOverall.visibility = View.VISIBLE
+                        } else {
+                            binding.tvEmptyOverall.visibility = View.GONE
+
+                            binding.tvPercent.visibility = View.VISIBLE
+                            binding.progressOverall.visibility = View.VISIBLE
+                            binding.tvSpent.visibility = View.VISIBLE
+
+                            val percent = utils.percentage(totalSpent, totalBudget)
+                            binding.tvPercent.text = "$percent% used"
+                            binding.progressOverall.progress = percent
+                            binding.tvSpent.text = "₹$totalSpent spent of ₹$totalBudget"
+                        }
+                    }
                 }
             }
         }
@@ -207,13 +253,41 @@ class BudgetFragment : BaseFragment<FragmentBudgetBinding>() {
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
+                        adapter.onDeleteClick = { item, position ->
+                            AlertDialog.Builder(requireContext())
+                                .setTitle("Delete Budget")
+                                .setMessage("Are you sure you want to delete the budget for ${item.categoryName}?")
+                                .setPositiveButton("Delete") { _, _ ->
+                                    budgetViewModel.deleteBudget(item.categoryId, item.month)
+                                }
+                                .setNegativeButton("Cancel", null)
+                                .show()
+                        }
+
                     }
                 }
             }
 
         }
+        lifecycleScope.launch {
+            budgetViewModel.deleteBudgetResult.collect { result ->
+                when (result) {
+                    is UiState.Success -> {
+                        showToast("Budget deleted")
+                        val month = binding.tvMonth.text.toString()
+                        budgetViewModel.getBudgets(month, forceRefresh = true)
+                        budgetViewModel.getSummary(month, forceRefresh = true)
+                    }
+                    is UiState.Error -> showToast("Error: ${result.message}")
+                    UiState.Idle -> {}
+                    UiState.Loading -> {}
+                }
+            }
+        }
 
     }
+
+
 
     override fun onDestroyView() {
         super.onDestroyView()

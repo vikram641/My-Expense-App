@@ -10,6 +10,8 @@
     <color name="text_secondary">#8FA3BF</color>
     <color name="text_hint">#8FA3BF</color>
     <color name="text_accent">#6C7BFF</color>
+    <color name="text_purple_light">#444447</color>
+
     <color name="input_bg">#1E2B44</color>
     <color name="text_error">#FF6B6B</color>
 
@@ -20,5 +22,11 @@
     <color name="progress_end">#9C7BFF</color>
 
     <color name="expense_red">#FF5C5C</color>
+
+    <!-- Home AI Insight card - dark purple-tinted, distinct from the plain navy
+         bg_card, so text_primary (white) stays readable on it. -->
+    <color name="ai_insight_bg_start">#241F45</color>
+    <color name="ai_insight_bg_end">#1A1830</color>
+    <color name="ai_insight_stroke">#3D3566</color>
 
 </resources>

@@ -12,6 +12,7 @@ import com.example.expense.core.UiState
 import com.example.expense.core.base.BaseFragment
 import com.example.expense.core.util.AvatarManager
 import com.example.expense.core.util.CurrencyConstants
+import com.example.expense.core.util.OnboardingPrefs
 import com.example.expense.databinding.FragmentEditProfileBinding
 import com.example.expense.ui.dialog.AvatarPickerBottomSheet
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,6 +26,9 @@ class EditProfileFragment : BaseFragment<FragmentEditProfileBinding>() {
 
     @Inject
     lateinit var avatarManager: AvatarManager
+
+    @Inject
+    lateinit var onboardingPrefs: OnboardingPrefs
 
     override fun inflateBinding(
         inflater: LayoutInflater,
@@ -41,8 +45,15 @@ class EditProfileFragment : BaseFragment<FragmentEditProfileBinding>() {
         )
         binding.etCurrency.setAdapter(currencyAdapter)
 
+        // Pre-fill from the local onboarding profile (see CLAUDE.md "Offline mode") -
+        // getUserProfile() below overwrites these if a real server profile fetch succeeds.
+        binding.etName.setText(onboardingPrefs.getUserName().orEmpty())
+        binding.etCurrency.setText(
+            CurrencyConstants.getDisplayForCode(onboardingPrefs.getCurrencyCode()), false
+        )
+
         viewModel.getUserProfile()
-        refreshAvatarDisplay()
+        refreshAvatarDisplay(onboardingPrefs.getUserName().orEmpty())
 
         // Avatar tap → open picker
         binding.tvAvatar.setOnClickListener { openAvatarPicker() }

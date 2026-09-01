@@ -7,14 +7,18 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.expense.core.network.NetworkMonitor
+import com.example.expense.core.util.OnboardingPrefs
 import com.example.expense.core.util.Utils
 import com.example.expense.data.model.ApiResponse
 import com.example.expense.data.model.ExpenseSummaryResponse
+import com.example.expense.data.model.ExpenseX
 import com.example.expense.data.repository.Repository
 import com.example.expense.core.UiState
+import com.example.expense.data.local.toEntityListExpenses
 import com.example.expense.data.model.User
 import com.example.expense.ui.dialog.MonthYearPickerDialog
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -25,7 +29,8 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val repository: Repository,
     private val utils: Utils,
-    private val networkMonitor: NetworkMonitor
+    private val networkMonitor: NetworkMonitor,
+    private val onboardingPrefs: OnboardingPrefs
 ) : ViewModel() {
 
     private val _isOffline = MutableStateFlow(false)
@@ -45,8 +50,28 @@ class HomeViewModel @Inject constructor(
     val progress = MutableLiveData(50)
     val remainingAmount = MutableLiveData("Remaining\n ₹20,000")
     val weekSpent = MutableLiveData("This Week\n ₹3000")
-    val userName = MutableLiveData("Good Morning \n Vikram 👋")
-    val userInitials = MutableLiveData("?")
+    // Seeded from the local onboarding profile (see CLAUDE.md "Offline mode") since there's
+    // no logged-in server profile to fetch right now - userProfileDetail() below still
+    // overwrites these if a real profile fetch ever succeeds.
+    val userName = MutableLiveData(localGreeting(onboardingPrefs.getUserName()))
+    val userInitials = MutableLiveData(initialsFrom(onboardingPrefs.getUserName()))
+
+    val insight = MutableLiveData<HomeInsight?>(null)
+
+    /** Reactive - re-emits automatically whenever Room's expenses table changes,
+     * so a newly-added expense shows up here without a manual refresh. */
+    val recentExpenses: Flow<List<ExpenseX>> = repository.observeCachedExpenses()
+
+    /**
+     * Computed locally from Room (see HomeInsightEngine) - no AI call, so this is
+     * free and safe to run on every Home load. Leaves [insight] at null (card
+     * hidden) whenever there's no genuine signal to report.
+     */
+    fun loadInsight() {
+        viewModelScope.launch {
+            insight.value = HomeInsightEngine.compute(repository)
+        }
+    }
 
     /**
      * Fetches weekly summary once per session. Subsequent calls within the same
@@ -88,14 +113,16 @@ class HomeViewModel @Inject constructor(
      */
     fun getSummary(forceRefresh: Boolean = false) {
         viewModelScope.launch {
-            _isOffline.value = !networkMonitor.isOnline()
-            if (_isOffline.value) {
-                _homeState.value = UiState.Idle
-                return@launch
-            }
+//            _isOffline.value = !networkMonitor.isOnline()
+//            if (_isOffline.value) {
+//                _homeState.value = UiState.Idle
+//                return@launch
+//            }
             _homeState.value = UiState.Loading
             val parm = selectedMonth.value
             val result = repository.getSummary(parm, forceRefresh)
+
+            Log.d("VVV",result.toString()+6789)
 
             if (result is UiState.Error) {
                 _isOffline.value = true
@@ -103,6 +130,7 @@ class HomeViewModel @Inject constructor(
                 return@launch
             }
             homeState.value = result
+//            Log.d("Re",result.toString())
 
             if (result is UiState.Success) {
                 totalSpent.value = "₹ ${result.data.data.totalSpent}"
@@ -127,15 +155,23 @@ class HomeViewModel @Inject constructor(
             Log.d("vvv", result.toString())
 
             if (result is UiState.Success) {
-                val name = result.data.data?.name.orEmpty()
+                val name = result.data.data.name.orEmpty()
                 userName.value = "${getGreeting()}\n$name 👋"
-                userInitials.value = name.split(" ").take(2)
-                    .mapNotNull { it.firstOrNull()?.uppercaseChar() }
-                    .joinToString("")
-                    .ifEmpty { "?" }
+                userInitials.value = initialsFrom(name)
             }
         }
     }
+
+    private fun localGreeting(name: String?): String {
+        val displayName = name?.takeIf { it.isNotBlank() } ?: "there"
+        return "${getGreeting()}\n$displayName 👋"
+    }
+
+    private fun initialsFrom(name: String?): String =
+        name.orEmpty().split(" ").take(2)
+            .mapNotNull { it.firstOrNull()?.uppercaseChar() }
+            .joinToString("")
+            .ifEmpty { "?" }
 
     private val _userDetailState = MutableStateFlow<UiState<ApiResponse<User>>>(UiState.Idle)
     val userDetailState = _userDetailState
@@ -155,4 +191,6 @@ class HomeViewModel @Inject constructor(
             else      -> "Good Night"
         }
     }
+
+
 }

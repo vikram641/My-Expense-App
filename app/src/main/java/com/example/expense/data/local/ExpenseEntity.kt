@@ -13,13 +13,17 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "expenses")
 data class ExpenseEntity(
     @PrimaryKey val id: String,
-    val amount: Int,
+    val amount: String,
     val currency: String,
     val date: String,
     val note: String,
-    val receiptUrl: String?,
+    val receiptUrl: String? = "",
     val createdAt: String,
     val updatedAt: String,
+    val isSynced: Boolean = false,
+    val localCreatedAt: Long = System.currentTimeMillis(),
+    val userId : String  = "",
+
 
     // flattened category
     val categoryId: String,

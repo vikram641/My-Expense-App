@@ -44,6 +44,8 @@ class ApiBaseUrlActivity : AppCompatActivity() {
             "https://expense-app-backend-91yj.onrender.com/",
             "http://192.168.0.116:3000/",
             "https://venal-kiesha-unwon.ngrok-free.dev/",
+            "http://192.168.0.114:3000/"
+
         )
 
         // Initialize Spinner

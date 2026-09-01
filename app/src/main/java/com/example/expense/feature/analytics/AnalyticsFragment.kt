@@ -125,10 +125,17 @@ class AnalyticsFragment : BaseFragment<FragmentAnalyticsBinding>() {
                     }
                     is UiState.Success -> {
 
-                        bindMonthlyChart(binding.barChart, state.data.data.byMonth)
-                        analyticsCategoryAdapter.submitList(state.data.data.byCategory)
+                        val byMonth = state.data.data.byMonth
+                        val byCategory = state.data.data.byCategory
 
+                        val hasMonthlyData = byMonth.any { it.amount > 0 }
+                        binding.barChart.visibility = if (hasMonthlyData) View.VISIBLE else View.GONE
+                        binding.layoutChartEmpty.root.visibility = if (hasMonthlyData) View.GONE else View.VISIBLE
+                        if (hasMonthlyData) bindMonthlyChart(binding.barChart, byMonth)
 
+                        binding.rvCategories.visibility = if (byCategory.isEmpty()) View.GONE else View.VISIBLE
+                        binding.layoutCategoriesEmpty.root.visibility = if (byCategory.isEmpty()) View.VISIBLE else View.GONE
+                        analyticsCategoryAdapter.submitList(byCategory)
 
                     }
                 }

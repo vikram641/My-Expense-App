@@ -53,13 +53,14 @@
 
     <style name="Theme.App.Starting" parent="Theme.SplashScreen">
 
-        <!-- ✅ Full purple — nothing else -->
+        <!-- ✅ Full purple background -->
         <item name="windowSplashScreenBackground">@color/accent</item>
 
-        <!-- ✅ Transparent icon — nothing visible -->
-        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_transparent</item>
+        <!-- App logo (adaptive icon's foreground layer - already sized to the safe zone
+             the SplashScreen API masks to, unlike the full mipmap/ic_launcher). -->
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_foreground</item>
 
-        <!-- ✅ No icon background -->
+        <!-- No icon background -->
         <item name="windowSplashScreenIconBackgroundColor">#00000000</item>
 
         <!-- ✅ Zero duration -->

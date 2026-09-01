@@ -11,5 +11,8 @@ data class BudgetEntity(
     val currency: String,
     val limitAmount: Int,
     val month: String,
-    val spentAmount: Int
+    val spentAmount: Int,
+    val categoryIcon : String,
+
+
 )
