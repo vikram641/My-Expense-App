@@ -26,7 +26,7 @@ val localProperties = Properties().apply {
 
 android {
     namespace = "com.example.expense"
-    compileSdk = 35
+    compileSdk = 36
 
     signingConfigs {
         create("release") {
@@ -58,7 +58,7 @@ android {
     defaultConfig {
         applicationId = "com.vikram641.expensetracker"
         minSdk = 24
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 6
         versionName = "1.2"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
