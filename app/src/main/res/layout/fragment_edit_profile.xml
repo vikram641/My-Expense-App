@@ -114,35 +114,6 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Email"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="12sp"
-                    android:layout_marginBottom="4dp"/>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:boxCornerRadiusTopStart="12dp"
-                    app:boxCornerRadiusTopEnd="12dp"
-                    app:boxCornerRadiusBottomStart="12dp"
-                    app:boxCornerRadiusBottomEnd="12dp"
-                    android:layout_marginBottom="12dp">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etEmail"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Email"
-                        android:enabled="false"
-                        android:textColor="@color/text_hint"
-                        android:textColorHint="@color/text_hint"
-                        android:inputType="textEmailAddress"/>
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:text="Currency"
                     android:textColor="@color/text_secondary"
                     android:textSize="12sp"
@@ -183,11 +154,15 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Change Password Card -->
+        <!-- Your Activity Card - replaces the old password-change card. There's no login
+             session to change a password against any more (see CLAUDE.md "Onboarding
+             replaces login on first run"), so this space now shows something a personal
+             finance app profile can actually use: at-a-glance tracking stats. -->
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardPassword"
+            android:id="@+id/cardActivity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
             app:cardCornerRadius="16dp"
             app:cardBackgroundColor="@color/bg_card"
             app:strokeWidth="0dp">
@@ -201,66 +176,109 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Change Password"
+                    android:text="Your Activity"
                     android:textColor="@color/text_primary"
                     android:textSize="15sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="16dp"/>
 
-                <com.google.android.material.textfield.TextInputLayout
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:endIconMode="password_toggle"
-                    app:boxCornerRadiusTopStart="12dp"
-                    app:boxCornerRadiusTopEnd="12dp"
-                    app:boxCornerRadiusBottomStart="12dp"
-                    app:boxCornerRadiusBottomEnd="12dp"
-                    android:layout_marginBottom="12dp">
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etCurrentPassword"
-                        android:layout_width="match_parent"
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:hint="Current password"
-                        android:textColor="@color/text_primary"
-                        android:textColorHint="@color/text_hint"
-                        android:inputType="textPassword"/>
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:gravity="center">
 
-                </com.google.android.material.textfield.TextInputLayout>
+                        <TextView
+                            android:id="@+id/tvStatExpenseCount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="@color/text_accent"
+                            android:textSize="20sp"
+                            android:textStyle="bold"/>
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:endIconMode="password_toggle"
-                    app:boxCornerRadiusTopStart="12dp"
-                    app:boxCornerRadiusTopEnd="12dp"
-                    app:boxCornerRadiusBottomStart="12dp"
-                    app:boxCornerRadiusBottomEnd="12dp"
-                    android:layout_marginBottom="20dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="Expenses"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="12sp"/>
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etNewPassword"
-                        android:layout_width="match_parent"
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="32dp"
+                        android:background="@color/bg_primary"/>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:hint="New password (min 6 chars)"
-                        android:textColor="@color/text_primary"
-                        android:textColorHint="@color/text_hint"
-                        android:inputType="textPassword"/>
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:gravity="center">
 
-                </com.google.android.material.textfield.TextInputLayout>
+                        <TextView
+                            android:id="@+id/tvStatTotalTracked"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:maxLines="1"
+                            android:ellipsize="end"
+                            android:text="0"
+                            android:textColor="@color/text_accent"
+                            android:textSize="20sp"
+                            android:textStyle="bold"/>
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnChangePassword"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:text="Update Password"
-                    android:textAllCaps="false"
-                    android:textSize="15sp"
-                    android:textColor="@color/text_accent"
-                    app:cornerRadius="12dp"
-                    android:backgroundTint="@color/bg_card"
-                    app:strokeColor="@color/text_accent"
-                    app:strokeWidth="1dp"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="Tracked"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="12sp"/>
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="32dp"
+                        android:background="@color/bg_primary"/>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:gravity="center">
+
+                        <TextView
+                            android:id="@+id/tvStatMemberSince"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="—"
+                            android:textColor="@color/text_accent"
+                            android:textSize="20sp"
+                            android:textStyle="bold"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="Member since"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="12sp"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
 
             </LinearLayout>
 

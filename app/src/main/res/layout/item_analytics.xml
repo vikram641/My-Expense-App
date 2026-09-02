@@ -6,14 +6,16 @@
     android:layout_height="wrap_content"
     android:padding="12dp">
 
-    <!-- Icon -->
-    <TextView
+    <!-- Icon - these are pre-colored flat illustration PNGs (ic_food.png etc.), not
+         tintable glyphs, so no app:tint here (matches BudgetAdapter's icon, which
+         doesn't tint either) - only the circle behind it picks up the category color. -->
+    <ImageView
         android:id="@+id/icon"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:background="@drawable/bg_circle"
-        android:gravity="center"
-        android:text="🍔"
+        android:padding="10dp"
+        android:src="@drawable/ic_transport"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 

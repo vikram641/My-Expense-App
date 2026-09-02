@@ -20,6 +20,7 @@ import com.example.expense.R
 import com.example.expense.core.UiState
 import com.example.expense.core.base.BaseFragment
 import com.example.expense.core.util.AvatarManager
+import com.example.expense.core.util.AvatarPalette
 import com.example.expense.core.util.OnboardingPrefs
 import com.example.expense.core.util.TokenManager
 import com.example.expense.databinding.FragmentSettingsBinding
@@ -111,6 +112,10 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>() {
         binding.tvExport.setOnClickListener(onExportRowClicked)
         binding.rowExportClickTarget.setOnClickListener(onExportRowClicked)
 
+        binding.rowSipClickTarget.setOnClickListener {
+            findNavController().navigate(R.id.action_dashboardFragment_to_sipCalculatorFragment)
+        }
+
         binding.btnLogout.setOnClickListener {
             LogoutConfirmDialog { syncBeforeLogout ->
                 val refreshToken = tokenManager.getRefreshToken() ?: ""
@@ -198,8 +203,12 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>() {
                     is UiState.Success -> {
                         showLoading(false)
                         tokenManager.clearSession()
+                        // No login screen to route to any more (see CLAUDE.md "Onboarding
+                        // replaces login on first run") - logout is really just a full local
+                        // reset, so it sends the user back through onboarding instead.
+                        onboardingPrefs.clearOnboarding()
                         findNavController().navigate(
-                            R.id.loginFragment,
+                            R.id.welcomeFragment,
                             null,
                             NavOptions.Builder()
                                 .setPopUpTo(R.id.nav_graph, true)
@@ -289,12 +298,14 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>() {
         if (emoji != null) {
             binding.tvAvatar.text = emoji
             binding.tvAvatar.textSize = 22f
+            binding.tvAvatar.background?.setTint(AvatarPalette.colorFor(emoji))
         } else {
             val initials = name.split(" ").take(2)
                 .mapNotNull { it.firstOrNull()?.uppercaseChar() }
                 .joinToString("").ifEmpty { "?" }
             binding.tvAvatar.text = initials
             binding.tvAvatar.textSize = 18f
+            binding.tvAvatar.background?.setTint(resources.getColor(R.color.avatar_bg, null))
         }
     }
 

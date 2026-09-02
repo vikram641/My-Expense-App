@@ -18,6 +18,7 @@ data class ByCategory(
     val categoryColor: String ,
     val categoryId: String,
     val categoryName: String,
+    val categoryIcon: String = "",
     val percentage: Int
 )
 

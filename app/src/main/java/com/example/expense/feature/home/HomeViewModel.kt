@@ -49,7 +49,7 @@ class HomeViewModel @Inject constructor(
     val totalBudget = MutableLiveData("₹40,000")
     val progress = MutableLiveData(50)
     val remainingAmount = MutableLiveData("Remaining\n ₹20,000")
-    val weekSpent = MutableLiveData("This Week\n ₹3000")
+    val weekSpent = MutableLiveData("This Week\n ₹0")
     // Seeded from the local onboarding profile (see CLAUDE.md "Offline mode") since there's
     // no logged-in server profile to fetch right now - userProfileDetail() below still
     // overwrites these if a real profile fetch ever succeeds.
@@ -83,7 +83,7 @@ class HomeViewModel @Inject constructor(
             val result = repository.getWeeklySummary(forceRefresh)
             Log.d("ppp", result.toString())
             if (result is UiState.Success) {
-                weekSpent.value = "The Week \n${result.data.data.totalSpent}"
+                weekSpent.value = "This Week \n₹${result.data.data.totalSpent}"
             }
         }
     }

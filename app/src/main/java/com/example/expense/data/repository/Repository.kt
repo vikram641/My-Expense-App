@@ -176,6 +176,7 @@ class Repository @Inject constructor(
                         categoryColor = list.first().categoryColor ,
                         categoryId = list.first().categoryId ,
                         categoryName = list.first().categoryName,
+                        categoryIcon = list.first().categoryIcon,
                         percentage = if (totalSpent == 0) 0 else (amount * 100 / totalSpent)
                     )
                 }
@@ -226,25 +227,48 @@ class Repository @Inject constructor(
     }
 
     /**
-     * Weekly summary: fetched once per session and stored in SharedPreferences.
+     * Weekly summary - was fetched from an authenticated REST endpoint, which always fails
+     * offline (see CLAUDE.md "Offline mode") and left Home's "This Week" box stuck on its
+     * hardcoded ₹3000 placeholder forever since the failed call just left weekSpent
+     * unchanged. Rewritten below to compute the last 7 days' spend from Room instead,
+     * the same offline-first approach getSummary() already uses.
      */
+//    suspend fun getWeeklySummary(forceRefresh: Boolean = false): UiState<ApiResponse<ExpenseWeeklySummaryResponse>> {
+//        val key = SessionCacheManager.KEY_WEEKLY_SUMMARY
+//        if (!forceRefresh && sessionCacheManager.isFetched(key)) {
+//            val json = sessionCacheManager.getString(key)
+//            if (json != null) {
+//                val type = object : TypeToken<ApiResponse<ExpenseWeeklySummaryResponse>>() {}.type
+//                val cached = gson.fromJson<ApiResponse<ExpenseWeeklySummaryResponse>>(json, type)
+//                return UiState.Success(cached)
+//            }
+//        }
+//        val result = utils.safeApiCall { homeApi.getWeeklySummary() }
+//        if (result is UiState.Success) {
+//            sessionCacheManager.putString(key, gson.toJson(result.data))
+//        }
+//        return result
+//    }
     suspend fun getWeeklySummary(forceRefresh: Boolean = false): UiState<ApiResponse<ExpenseWeeklySummaryResponse>> {
+        return try {
+            val dateFormat = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault())
+            val calendar = java.util.Calendar.getInstance()
+            val toDate = dateFormat.format(calendar.time)
+            calendar.add(java.util.Calendar.DAY_OF_YEAR, -6)
+            val fromDate = dateFormat.format(calendar.time)
 
+            val weekExpenses = expenseDao.getExpensesBetweenDates(fromDate, toDate)
+            val totalSpent = weekExpenses.sumOf { it.amount.toIntOrNull() ?: 0 }
 
-        val key = SessionCacheManager.KEY_WEEKLY_SUMMARY
-        if (!forceRefresh && sessionCacheManager.isFetched(key)) {
-            val json = sessionCacheManager.getString(key)
-            if (json != null) {
-                val type = object : TypeToken<ApiResponse<ExpenseWeeklySummaryResponse>>() {}.type
-                val cached = gson.fromJson<ApiResponse<ExpenseWeeklySummaryResponse>>(json, type)
-                return UiState.Success(cached)
-            }
+            UiState.Success(
+                ApiResponse(
+                    success = true,
+                    data = ExpenseWeeklySummaryResponse(from = fromDate, to = toDate, totalSpent = totalSpent)
+                )
+            )
+        } catch (e: Exception) {
+            UiState.Error(e.message ?: "Something went wrong")
         }
-        val result = utils.safeApiCall { homeApi.getWeeklySummary() }
-        if (result is UiState.Success) {
-            sessionCacheManager.putString(key, gson.toJson(result.data))
-        }
-        return result
     }
 
     suspend fun getSyncForExpense(): UiState<ApiResponse<GetExpenseSyncDataResponse>>{

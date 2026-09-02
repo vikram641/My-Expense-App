@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.expense.core.UiState
 import com.example.expense.core.util.ExpenseCsvExporter
+import com.example.expense.core.util.OnboardingPrefs
 import com.example.expense.data.model.ApiResponse
 import com.example.expense.data.model.ChangePasswordRequest
 import com.example.expense.data.model.DeleteResponse
@@ -16,16 +17,43 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import javax.inject.Inject
+
+data class ProfileStats(
+    val expenseCount: Int = 0,
+    val totalTracked: Int = 0,
+    val memberSince: String = "—"
+)
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val repository: Repository,
-    private val csvExporter: ExpenseCsvExporter
+    private val csvExporter: ExpenseCsvExporter,
+    private val onboardingPrefs: OnboardingPrefs
 ) : ViewModel() {
 
     private val _settingState = MutableStateFlow<UiState<ApiResponse<User>>>(UiState.Idle)
     val settingState: StateFlow<UiState<ApiResponse<User>>> = _settingState
+
+    /** Powers Profile's "Your Activity" card (replaces the removed change-password card). */
+    private val _profileStats = MutableStateFlow(
+        ProfileStats(memberSince = SimpleDateFormat("MMM yyyy", Locale.getDefault()).format(Date(onboardingPrefs.getCompletedAt())))
+    )
+    val profileStats: StateFlow<ProfileStats> = _profileStats
+
+    init {
+        viewModelScope.launch {
+            repository.observeCachedExpenses().collect { expenses ->
+                _profileStats.value = _profileStats.value.copy(
+                    expenseCount = expenses.size,
+                    totalTracked = expenses.sumOf { it.amount.toIntOrNull() ?: 0 }
+                )
+            }
+        }
+    }
 
     private val _exportState = MutableStateFlow<UiState<String>>(UiState.Idle)
     val exportState: StateFlow<UiState<String>> = _exportState

@@ -1,6 +1,6 @@
 package com.example.expense.ui.adapter
 
-import android.R
+import com.example.expense.R
 import android.content.res.ColorStateList
 import com.example.expense.core.base.BaseAdapter
 import android.graphics.Color
@@ -30,7 +30,18 @@ class AnalyticsCategoryAdapter: BaseAdapter<ByCategory , ItemAnalyticsBinding>()
             progressTintList = ColorStateList.valueOf(Color.parseColor(item.categoryColor))
         }
 
+        // Real per-category icon instead of a hardcoded 🍔 for every row - same
+        // getIdentifier + fallback pattern BudgetAdapter uses.
+        val context = binding.root.context
+        val resId = context.resources.getIdentifier(item.categoryIcon, "drawable", context.packageName)
+        binding.icon.setImageResource(if (resId != 0) resId else R.drawable.ic_transport)
 
+        val color = try {
+            Color.parseColor(item.categoryColor)
+        } catch (e: Exception) {
+            Color.GRAY
+        }
+        binding.icon.backgroundTintList = ColorStateList.valueOf(color)
     }
 
 }

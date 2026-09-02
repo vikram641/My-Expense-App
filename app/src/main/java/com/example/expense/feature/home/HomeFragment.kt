@@ -29,6 +29,7 @@ import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.example.expense.core.util.AvatarManager
+import com.example.expense.core.util.AvatarPalette
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -76,6 +77,10 @@ class HomeFragment : Fragment() {
 
         b.btnAskAi.setOnClickListener {
             findNavController().navigate(R.id.action_dashboardFragment_to_chatFragment)
+        }
+
+        b.btnEmptyStateAdd.setOnClickListener {
+            findNavController().navigate(R.id.action_dashboardFragment_to_addExpenseFragment)
         }
 
 
@@ -169,10 +174,12 @@ class HomeFragment : Fragment() {
         if (emoji != null) {
             b.avatar.text = emoji
             b.avatar.textSize = 20f
+            b.avatar.background?.setTint(AvatarPalette.colorFor(emoji))
         } else {
             val initials = homeViewModel.userInitials.value ?: "?"
             b.avatar.text = initials
             b.avatar.textSize = 14f
+            b.avatar.background?.setTint(resources.getColor(R.color.avatar_bg, null))
         }
     }
 
@@ -270,6 +277,16 @@ class HomeFragment : Fragment() {
                     is UiState.Success ->{
 //                        kotlinx.coroutines.delay(2000)
                         showLoading(false)
+
+                        val hasExpenses = state.data.data.byCategory.isNotEmpty()
+                        b.constraintLayout.visibility = if (hasExpenses) View.VISIBLE else View.GONE
+                        b.emptyStateCard.visibility = if (hasExpenses) View.GONE else View.VISIBLE
+                        if (!hasExpenses) {
+                            legendAdapter = LegendAdapter(emptyList())
+                            b.rvLegend.adapter = legendAdapter
+                            return@collect
+                        }
+
                         legendAdapter = LegendAdapter(state.data.data.byCategory)
                         b.rvLegend.adapter = legendAdapter
                         val pieEntries = ArrayList<PieEntry>()

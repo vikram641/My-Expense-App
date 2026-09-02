@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.airbnb.lottie.LottieAnimationView
 import com.example.expense.R
 
 private const val TYPE_USER = 0
@@ -56,11 +57,21 @@ class ChatAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private class AssistantViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val tvMessage: TextView = view.findViewById(R.id.tvMessage)
+        private val lottieThinking: LottieAnimationView = view.findViewById(R.id.lottieThinking)
         private val categoryContainer: LinearLayout = view.findViewById(R.id.categoryContainer)
 
         fun bind(message: ChatMessage.Assistant) {
-            tvMessage.text = if (message.isLoading) "Thinking…" else message.text
-            tvMessage.alpha = if (message.isLoading) 0.6f else 1f
+            if (message.isLoading) {
+                tvMessage.visibility = View.GONE
+                lottieThinking.visibility = View.VISIBLE
+                lottieThinking.playAnimation()
+            } else {
+                lottieThinking.cancelAnimation()
+                lottieThinking.visibility = View.GONE
+                tvMessage.visibility = View.VISIBLE
+                tvMessage.text = message.text
+                tvMessage.alpha = 1f
+            }
 
             categoryContainer.removeAllViews()
             if (message.categories.isEmpty()) {

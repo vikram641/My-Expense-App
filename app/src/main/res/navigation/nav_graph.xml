@@ -69,6 +69,9 @@
         <action
             android:id="@+id/action_dashboardFragment_to_chatFragment"
             app:destination="@id/chatFragment" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_sipCalculatorFragment"
+            app:destination="@id/sipCalculatorFragment" />
     </fragment>
     <fragment
         android:id="@+id/homeFragment"
@@ -139,6 +142,11 @@
         android:name="com.example.expense.feature.settings.EditProfileFragment"
         android:label="fragment_edit_profile"
         tools:layout="@layout/fragment_edit_profile" />
+    <fragment
+        android:id="@+id/sipCalculatorFragment"
+        android:name="com.example.expense.feature.tools.SipCalculatorFragment"
+        android:label="fragment_sip_calculator"
+        tools:layout="@layout/fragment_sip_calculator" />
 
     <!-- Onboarding - first-run flow shown instead of Login/Register (see CLAUDE.md
          "Onboarding replaces login on first run"). Folded into this single graph/Activity

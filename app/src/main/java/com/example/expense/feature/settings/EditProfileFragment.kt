@@ -8,9 +8,11 @@ import android.widget.ArrayAdapter
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.example.expense.R
 import com.example.expense.core.UiState
 import com.example.expense.core.base.BaseFragment
 import com.example.expense.core.util.AvatarManager
+import com.example.expense.core.util.AvatarPalette
 import com.example.expense.core.util.CurrencyConstants
 import com.example.expense.core.util.OnboardingPrefs
 import com.example.expense.databinding.FragmentEditProfileBinding
@@ -77,19 +79,6 @@ class EditProfileFragment : BaseFragment<FragmentEditProfileBinding>() {
             viewModel.updateProfile(name, currency)
         }
 
-        binding.btnChangePassword.setOnClickListener {
-            val current = binding.etCurrentPassword.text?.toString()?.trim() ?: ""
-            val newPass = binding.etNewPassword.text?.toString()?.trim() ?: ""
-            if (current.isEmpty() || newPass.isEmpty()) {
-                showToast("Please fill both password fields")
-                return@setOnClickListener
-            }
-            if (newPass.length < 6) {
-                showToast("New password must be at least 6 characters")
-                return@setOnClickListener
-            }
-            viewModel.changePassword(current, newPass)
-        }
     }
 
     override fun observeState() {
@@ -100,9 +89,6 @@ class EditProfileFragment : BaseFragment<FragmentEditProfileBinding>() {
                     val user = state.data.data
                     if (binding.etName.text.isNullOrEmpty()) {
                         binding.etName.setText(user.name.orEmpty())
-                    }
-                    if (binding.etEmail.text.isNullOrEmpty()) {
-                        binding.etEmail.setText(user.email.orEmpty())
                     }
                     if (binding.etCurrency.text.isNullOrEmpty()) {
                         binding.etCurrency.setText(
@@ -133,23 +119,13 @@ class EditProfileFragment : BaseFragment<FragmentEditProfileBinding>() {
             }
         }
 
-        // Change password result
+        // "Your Activity" stats card
         lifecycleScope.launch {
-            viewModel.changePasswordState.collect { state ->
-                when (state) {
-                    is UiState.Loading -> binding.btnChangePassword.isEnabled = false
-                    is UiState.Success -> {
-                        binding.btnChangePassword.isEnabled = true
-                        binding.etCurrentPassword.text?.clear()
-                        binding.etNewPassword.text?.clear()
-                        showToast("Password changed successfully")
-                    }
-                    is UiState.Error -> {
-                        binding.btnChangePassword.isEnabled = true
-                        showToast(state.message)
-                    }
-                    UiState.Idle -> {}
-                }
+            viewModel.profileStats.collect { stats ->
+                val symbol = CurrencyConstants.getSymbol(onboardingPrefs.getCurrencyCode())
+                binding.tvStatExpenseCount.text = stats.expenseCount.toString()
+                binding.tvStatTotalTracked.text = "$symbol${stats.totalTracked}"
+                binding.tvStatMemberSince.text = stats.memberSince
             }
         }
     }
@@ -164,12 +140,14 @@ class EditProfileFragment : BaseFragment<FragmentEditProfileBinding>() {
         if (emoji != null) {
             binding.tvAvatar.text = emoji
             binding.tvAvatar.textSize = 26f
+            binding.tvAvatar.background?.setTint(AvatarPalette.colorFor(emoji))
         } else {
             val initials = name.split(" ").take(2)
                 .mapNotNull { it.firstOrNull()?.uppercaseChar() }
                 .joinToString("").ifEmpty { "?" }
             binding.tvAvatar.text = initials
             binding.tvAvatar.textSize = 20f
+            binding.tvAvatar.background?.setTint(resources.getColor(R.color.avatar_bg, null))
         }
     }
 }

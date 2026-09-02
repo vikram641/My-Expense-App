@@ -409,6 +409,79 @@
 
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
+                        <!-- EMPTY STATE - shown instead of the chart card on a fresh account
+                             with zero expenses this month, so first-run Home doesn't read as
+                             broken/blank. -->
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/emptyStateCard"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="16dp"
+                            android:background="@drawable/bg_card"
+                            android:elevation="@dimen/padding_16"
+                            android:paddingHorizontal="24dp"
+                            android:paddingVertical="32dp"
+                            android:visibility="gone"
+                            tools:visibility="visible"
+                            app:layout_constraintTop_toBottomOf="@id/mainCard"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent">
+
+                            <ImageView
+                                android:id="@+id/ivEmptyState"
+                                android:layout_width="56dp"
+                                android:layout_height="56dp"
+                                android:background="@drawable/bg_circle_button"
+                                android:padding="14dp"
+                                android:src="@drawable/ic_wallet_empty"
+                                app:tint="@color/accent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"/>
+
+                            <TextView
+                                android:id="@+id/tvEmptyStateTitle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="16dp"
+                                android:text="No expenses yet"
+                                android:textColor="@color/text_primary"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/ivEmptyState"/>
+
+                            <TextView
+                                android:id="@+id/tvEmptyStateSubtitle"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="6dp"
+                                android:gravity="center"
+                                android:text="Log your first expense and this space turns into your spending breakdown."
+                                android:textColor="@color/text_secondary"
+                                android:textSize="13sp"
+                                android:lineSpacingExtra="2dp"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/tvEmptyStateTitle"/>
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnEmptyStateAdd"
+                                android:layout_width="wrap_content"
+                                android:layout_height="44dp"
+                                android:layout_marginTop="18dp"
+                                android:text="+ Add your first expense"
+                                android:textAllCaps="false"
+                                android:textSize="13sp"
+                                app:cornerRadius="12dp"
+                                android:backgroundTint="@color/text_accent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/tvEmptyStateSubtitle"/>
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
                         <!-- RECENT -->
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:id="@+id/recentHeaderRow"
