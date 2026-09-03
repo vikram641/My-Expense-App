@@ -59,7 +59,7 @@ android {
         applicationId = "com.vikram641.expensetracker"
         minSdk = 24
         targetSdk = 36
-        versionCode = 6
+        versionCode = 7
         versionName = "1.2"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 

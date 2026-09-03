@@ -75,6 +75,7 @@ class SetupBudgetFragment : Fragment() {
 
         b.rvCategories.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         b.rvCategories.adapter = categoryAdapter
+        viewModel.retryLoadCategoriesIfEmpty()
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.categories.collect { categories ->

@@ -9,7 +9,9 @@ import com.example.expense.data.local.BudgetEntity
 import com.example.expense.data.local.CategoryDao
 import com.example.expense.data.local.CategoryEntity
 import com.example.expense.data.repository.Repository
+import com.example.expense.core.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
@@ -46,7 +48,29 @@ class OnboardingViewModel @Inject constructor(
         // picker would render empty and the user couldn't select anything. Kick the fetch off
         // as soon as onboarding starts so categories are ready several screens later, by the
         // time the user reaches SetupBudgetFragment.
-        viewModelScope.launch { repository.getExpenseCat() }
+        viewModelScope.launch { loadCategoriesWithRetry() }
+    }
+
+    /**
+     * getExpenseCat() is a single Firestore call with no retry - on a fresh install this races
+     * the app's own Firebase init and any first-request network latency, so it fails silently
+     * on a fraction of cold starts and the chip picker was permanently empty for that session
+     * (the "category list sometimes doesn't show" bug). Retry a few times with a short delay
+     * before giving up; SetupBudgetFragment also calls retryLoadCategoriesIfEmpty() as a second
+     * chance in case all of these attempts land before the network is actually up.
+     */
+    private suspend fun loadCategoriesWithRetry() {
+        repeat(3) { attempt ->
+            if (repository.getExpenseCat() is UiState.Success) return
+            if (attempt < 2) delay(1500)
+        }
+    }
+
+    /** Called from SetupBudgetFragment.onViewCreated() - cheap no-op if categories already loaded. */
+    fun retryLoadCategoriesIfEmpty() {
+        if (categories.value.isEmpty()) {
+            viewModelScope.launch { loadCategoriesWithRetry() }
+        }
     }
 
     /**
