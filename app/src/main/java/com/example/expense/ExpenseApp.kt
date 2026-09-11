@@ -49,11 +49,12 @@ class ExpenseApp : Application(), Configuration.Provider {
 
         MobileAds.initialize(this) { /* init status callback, safe to ignore */ }
         if (BuildConfig.DEBUG) {
-            // Avoid triggering real ad requests from this dev device - see
-            // Logcat on first run for "Use RequestConfiguration.Builder()..." with
-            // this device's actual test-device ID and replace the placeholder below.
+            // Registers the OnePlus Nord dev device this app was verified on
+            // (2026-09-11) as a test device. A different physical device will log its
+            // own hashed ID on first run ("Use RequestConfiguration.Builder()...") -
+            // add it here too rather than replacing this one.
             val config = RequestConfiguration.Builder()
-                .setTestDeviceIds(listOf("TEST-DEVICE-ID-FROM-LOGCAT"))
+                .setTestDeviceIds(listOf("5ECA94DDBA24462E82FE5C3DB1B8B82A"))
                 .build()
             MobileAds.setRequestConfiguration(config)
         }
