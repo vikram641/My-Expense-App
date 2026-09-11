@@ -5,6 +5,7 @@ import android.content.Context
 import com.example.expense.BuildConfig
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
@@ -48,9 +49,18 @@ class AdManager @Inject constructor(
     private var isLoadingInterstitial = false
 
     /** Suspends until UMP consent has been gathered (or the check failed/wasn't
-     * required) before actually requesting the ad - see [AdConsentManager]. */
+     * required) before actually requesting the ad - see [AdConsentManager].
+     *
+     * Sets both adSize and adUnitId here in code (even though the layout also
+     * declares `app:adSize`) - setting adUnitId via code *after* XML has already
+     * set adSize does not reliably re-initialize the SDK's internal ad-loader client
+     * in play-services-ads 23.6.0, and loadAd() then throws
+     * "The ad size and ad unit ID must be set before loadAd is called" even though
+     * both were technically set at different times. Setting both together,
+     * immediately before loadAd(), avoids the ordering issue entirely. */
     suspend fun loadBannerAd(adView: AdView) {
         consentManager.awaitReady()
+        adView.setAdSize(AdSize.BANNER)
         adView.adUnitId = bannerAdUnitId
         adView.loadAd(AdRequest.Builder().build())
     }
