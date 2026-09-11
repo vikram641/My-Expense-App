@@ -24,7 +24,6 @@ private const val TEST_INTERSTITIAL_AD_UNIT_ID = "ca-app-pub-3940256099942544/10
 // Real ad units, created in the AdMob console 2026-09-11 - each is shared across
 // multiple placements (see docs/GOOGLE_ADS_ADMOB_INTEGRATION.md) rather than one
 // unit per screen, since this app has no need for per-placement reporting yet.
-// NOT wired in below yet - see USE_REAL_AD_UNITS.
 private const val REAL_BANNER_AD_UNIT_ID = "ca-app-pub-7178541936408370/7875983914" // "Shared Banner (Home, Expense Detail, Profile)"
 private const val REAL_INTERSTITIAL_AD_UNIT_ID = "ca-app-pub-7178541936408370/2157482326" // "Shared Interstitial (Export Data, SIP Calculator)"
 
@@ -36,10 +35,14 @@ private const val REAL_INTERSTITIAL_AD_UNIT_ID = "ca-app-pub-7178541936408370/21
  * Advertising ID behavior), so registering a test-device ID is not a reliable
  * safeguard here. A real interstitial (GoMechanic) served and was shown as a result.
  * Keep this `false` for all local/personal-device testing, regardless of build type.
- * Flip to `true` only for the actual build you upload to the Play Console - never
- * install that build on a personal device afterward without flipping it back.
+ *
+ * Flipped to `true` 2026-09-11 for the versionCode 8 release built for the Play
+ * Console Closed testing - Alpha track upload. If you ever pull this exact build
+ * back down and install it on a personal device to test something else, flip this
+ * back to `false` first and rebuild - do not browse a personal device on a
+ * true-flagged build.
  */
-private const val USE_REAL_AD_UNITS = false
+private const val USE_REAL_AD_UNITS = true
 
 @Singleton
 class AdManager @Inject constructor(

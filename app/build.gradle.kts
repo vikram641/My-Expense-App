@@ -59,8 +59,8 @@ android {
         applicationId = "com.vikram641.expensetracker"
         minSdk = 24
         targetSdk = 36
-        versionCode = 7
-        versionName = "1.2"
+        versionCode = 8
+        versionName = "1.3"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         // Ask FixMoney's second AI fallback tier (after Gemini's free-tier quota) -
