@@ -2,7 +2,6 @@ package com.example.expense.core.ads
 
 import android.app.Activity
 import android.content.Context
-import com.example.expense.BuildConfig
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
@@ -25,8 +24,22 @@ private const val TEST_INTERSTITIAL_AD_UNIT_ID = "ca-app-pub-3940256099942544/10
 // Real ad units, created in the AdMob console 2026-09-11 - each is shared across
 // multiple placements (see docs/GOOGLE_ADS_ADMOB_INTEGRATION.md) rather than one
 // unit per screen, since this app has no need for per-placement reporting yet.
+// NOT wired in below yet - see USE_REAL_AD_UNITS.
 private const val REAL_BANNER_AD_UNIT_ID = "ca-app-pub-7178541936408370/7875983914" // "Shared Banner (Home, Expense Detail, Profile)"
 private const val REAL_INTERSTITIAL_AD_UNIT_ID = "ca-app-pub-7178541936408370/2157482326" // "Shared Interstitial (Export Data, SIP Calculator)"
+
+/**
+ * Deliberately NOT keyed off BuildConfig.DEBUG - a `release` build gets sideloaded
+ * onto the developer's own device for testing too, and this device's AdMob
+ * test-device hash was observed to change between sessions (`5ECA94DDBA...` then
+ * `6268EABA...` on the same physical phone, 2026-09-11 - likely OEM-specific
+ * Advertising ID behavior), so registering a test-device ID is not a reliable
+ * safeguard here. A real interstitial (GoMechanic) served and was shown as a result.
+ * Keep this `false` for all local/personal-device testing, regardless of build type.
+ * Flip to `true` only for the actual build you upload to the Play Console - never
+ * install that build on a personal device afterward without flipping it back.
+ */
+private const val USE_REAL_AD_UNITS = false
 
 @Singleton
 class AdManager @Inject constructor(
@@ -34,11 +47,11 @@ class AdManager @Inject constructor(
     private val consentManager: AdConsentManager
 ) {
 
-    // Test IDs in debug builds only - never test against real ad units on a personal
-    // device (self-serves count as invalid traffic and can get the AdMob account suspended).
-    private val bannerAdUnitId: String = if (BuildConfig.DEBUG) TEST_BANNER_AD_UNIT_ID else REAL_BANNER_AD_UNIT_ID
+    // See USE_REAL_AD_UNITS - never test against real ad units on a personal device
+    // (self-serves count as invalid traffic and can get the AdMob account suspended).
+    private val bannerAdUnitId: String = if (USE_REAL_AD_UNITS) REAL_BANNER_AD_UNIT_ID else TEST_BANNER_AD_UNIT_ID
     private val interstitialAdUnitId: String =
-        if (BuildConfig.DEBUG) TEST_INTERSTITIAL_AD_UNIT_ID else REAL_INTERSTITIAL_AD_UNIT_ID
+        if (USE_REAL_AD_UNITS) REAL_INTERSTITIAL_AD_UNIT_ID else TEST_INTERSTITIAL_AD_UNIT_ID
 
     // Lives as long as the app (this class is a Hilt singleton) - used only to let the
     // interstitial's own callbacks (onAdDismissed/onAdFailed) kick off the next
