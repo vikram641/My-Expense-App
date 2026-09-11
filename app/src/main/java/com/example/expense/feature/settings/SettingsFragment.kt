@@ -18,6 +18,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.expense.R
 import com.example.expense.core.UiState
+import com.example.expense.core.ads.AdManager
 import com.example.expense.core.base.BaseFragment
 import com.example.expense.core.util.AvatarManager
 import com.example.expense.core.util.AvatarPalette
@@ -47,12 +48,15 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>() {
     @Inject
     lateinit var onboardingPrefs: OnboardingPrefs
 
+    @Inject
+    lateinit var adManager: AdManager
+
     // Only actually needed on API 24-28 (see manifest's maxSdkVersion="28" on
     // WRITE_EXTERNAL_STORAGE) - API 29+ exports via MediaStore, no permission required.
     private val requestExportPermission = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { granted ->
-        if (granted) openExportDialog() else showToast("Storage permission is needed to export")
+        if (granted) showInterstitialThen { openExportDialog() } else showToast("Storage permission is needed to export")
     }
 
     override fun inflateBinding(
@@ -93,6 +97,8 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>() {
         refreshAvatarDisplay(onboardingPrefs.getUserName().orEmpty())
 
         settingsViewModel.getUserProfile()
+        // Preload so it's more likely ready by the time Export Data / SIP Calculator is tapped.
+        adManager.preloadInterstitial()
 
         binding.profileCard.setOnClickListener {
             findNavController().navigate(R.id.action_dashboardFragment_to_editProfileFragment)
@@ -105,7 +111,7 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>() {
             ) {
                 requestExportPermission.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
             } else {
-                openExportDialog()
+                showInterstitialThen { openExportDialog() }
             }
         }
         binding.iconExport.setOnClickListener(onExportRowClicked)
@@ -113,7 +119,9 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>() {
         binding.rowExportClickTarget.setOnClickListener(onExportRowClicked)
 
         binding.rowSipClickTarget.setOnClickListener {
-            findNavController().navigate(R.id.action_dashboardFragment_to_sipCalculatorFragment)
+            showInterstitialThen {
+                findNavController().navigate(R.id.action_dashboardFragment_to_sipCalculatorFragment)
+            }
         }
 
         binding.btnLogout.setOnClickListener {
@@ -226,6 +234,12 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>() {
                 }
             }
         }
+    }
+
+    /** Shows the preloaded interstitial (if ready) before running [action]; if none is
+     * ready, [action] just runs immediately - never blocks navigation on ad availability. */
+    private fun showInterstitialThen(action: () -> Unit) {
+        adManager.showInterstitial(requireActivity(), onDismissed = action)
     }
 
     private fun openExportDialog() {

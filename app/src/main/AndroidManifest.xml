@@ -42,6 +42,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Expense"
         android:usesCleartextTraffic="true">
+
+        <!-- AdMob App ID (not an ad unit ID) - required by MobileAds.initialize().
+             App created manually in AdMob console since this app isn't public yet
+             (still Closed testing); not linked to a Play Store listing. -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-7178541936408370~9464292553" />
+
         <!-- Register SMS Receiver -->
         <service
             android:name=".notification.MyFirebaseMessagingService"

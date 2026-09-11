@@ -190,6 +190,10 @@ dependencies {
     // requires a login token that's unavailable while the app runs offline)
     implementation("com.google.firebase:firebase-firestore")
 
+    // AdMob + consent (UMP)
+    implementation(libs.play.services.ads)
+    implementation(libs.user.messaging.platform)
+
 }
 
 kapt {

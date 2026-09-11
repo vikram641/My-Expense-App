@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.expense.R
 import com.example.expense.core.UiState
+import com.example.expense.core.ads.AdManager
 import com.example.expense.core.base.BaseFragment
 import com.example.expense.core.util.AvatarManager
 import com.example.expense.core.util.AvatarPalette
@@ -32,6 +33,9 @@ class EditProfileFragment : BaseFragment<FragmentEditProfileBinding>() {
     @Inject
     lateinit var onboardingPrefs: OnboardingPrefs
 
+    @Inject
+    lateinit var adManager: AdManager
+
     override fun inflateBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
@@ -39,6 +43,8 @@ class EditProfileFragment : BaseFragment<FragmentEditProfileBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        adManager.loadBannerAd(binding.adViewProfile)
 
         val currencyAdapter = ArrayAdapter(
             requireContext(),
@@ -128,6 +134,21 @@ class EditProfileFragment : BaseFragment<FragmentEditProfileBinding>() {
                 binding.tvStatMemberSince.text = stats.memberSince
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.adViewProfile.resume()
+    }
+
+    override fun onPause() {
+        binding.adViewProfile.pause()
+        super.onPause()
+    }
+
+    override fun onDestroyView() {
+        binding.adViewProfile.destroy()
+        super.onDestroyView()
     }
 
     private fun openAvatarPicker() {

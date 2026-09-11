@@ -552,6 +552,17 @@
                 android:src="@android:drawable/ic_input_add"
                 app:backgroundTint="@color/text_accent"/>
 
+            <!-- AdMob banner - bottom margin clears DashboardFragment's 70dp
+                 bottomNav, which is a sibling drawn on top of this whole fragment's
+                 container (see fragment_dashboard.xml), not something in this layout. -->
+            <com.google.android.gms.ads.AdView
+                android:id="@+id/adViewHome"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="70dp"
+                app:adSize="BANNER"/>
+
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
         <!-- Loader -->

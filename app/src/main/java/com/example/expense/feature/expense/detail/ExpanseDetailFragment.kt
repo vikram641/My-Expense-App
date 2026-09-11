@@ -12,18 +12,23 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.expense.R
 import com.example.expense.core.UiState
+import com.example.expense.core.ads.AdManager
 import com.example.expense.core.base.BaseFragment
 import com.example.expense.databinding.FragmentExpanseDetailBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ExpanseDetailFragment : BaseFragment<FragmentExpanseDetailBinding>() {
 
     private val viewModel: ExpenseDetailViewModel by viewModels()
     private var expenseId: String? = null
+
+    @Inject
+    lateinit var adManager: AdManager
 
     override fun inflateBinding(
         inflater: LayoutInflater,
@@ -32,6 +37,8 @@ class ExpanseDetailFragment : BaseFragment<FragmentExpanseDetailBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        adManager.loadBannerAd(binding.adViewExpenseDetail)
 
         expenseId = arguments?.getString("expenseId")
         expenseId?.let { viewModel.getExpenseDetail(it) }
@@ -63,6 +70,17 @@ class ExpanseDetailFragment : BaseFragment<FragmentExpanseDetailBinding>() {
         super.onResume()
         // Re-fetch on return from the edit screen so changes are reflected.
         expenseId?.let { viewModel.getExpenseDetail(it) }
+        binding.adViewExpenseDetail.resume()
+    }
+
+    override fun onPause() {
+        binding.adViewExpenseDetail.pause()
+        super.onPause()
+    }
+
+    override fun onDestroyView() {
+        binding.adViewExpenseDetail.destroy()
+        super.onDestroyView()
     }
 
     override fun observeState() {

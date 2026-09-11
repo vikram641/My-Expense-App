@@ -30,6 +30,7 @@ import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.example.expense.core.util.AvatarManager
 import com.example.expense.core.util.AvatarPalette
+import com.example.expense.core.ads.AdManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -49,6 +50,9 @@ class HomeFragment : Fragment() {
 
     @Inject
     lateinit var avatarManager: AvatarManager
+
+    @Inject
+    lateinit var adManager: AdManager
 
     private lateinit var legendAdapter: LegendAdapter
 
@@ -70,6 +74,8 @@ class HomeFragment : Fragment() {
 
         val name  = arguments?.getString("name")
         val email = arguments?.getString("email")
+
+        adManager.loadBannerAd(b.adViewHome)
 
         b.avatar.setOnClickListener {
             findNavController().navigate(R.id.action_dashboardFragment_to_editProfileFragment)
@@ -167,6 +173,17 @@ class HomeFragment : Fragment() {
         super.onResume()
         refreshAvatar()
         homeViewModel.checkNetwork()
+        b.adViewHome.resume()
+    }
+
+    override fun onPause() {
+        b.adViewHome.pause()
+        super.onPause()
+    }
+
+    override fun onDestroyView() {
+        b.adViewHome.destroy()
+        super.onDestroyView()
     }
 
     private fun refreshAvatar() {
