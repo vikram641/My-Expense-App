@@ -44,7 +44,7 @@ class EditProfileFragment : BaseFragment<FragmentEditProfileBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adManager.loadBannerAd(binding.adViewProfile)
+        lifecycleScope.launch { adManager.loadBannerAd(binding.adViewProfile) }
 
         val currencyAdapter = ArrayAdapter(
             requireContext(),

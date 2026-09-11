@@ -11,6 +11,10 @@ import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -24,7 +28,10 @@ private const val REAL_BANNER_AD_UNIT_ID = "ca-app-pub-7178541936408370/78759839
 private const val REAL_INTERSTITIAL_AD_UNIT_ID = "ca-app-pub-7178541936408370/2157482326" // "Shared Interstitial (Export Data, SIP Calculator)"
 
 @Singleton
-class AdManager @Inject constructor(@ApplicationContext private val context: Context) {
+class AdManager @Inject constructor(
+    @ApplicationContext private val context: Context,
+    private val consentManager: AdConsentManager
+) {
 
     // Test IDs in debug builds only - never test against real ad units on a personal
     // device (self-serves count as invalid traffic and can get the AdMob account suspended).
@@ -32,10 +39,18 @@ class AdManager @Inject constructor(@ApplicationContext private val context: Con
     private val interstitialAdUnitId: String =
         if (BuildConfig.DEBUG) TEST_INTERSTITIAL_AD_UNIT_ID else REAL_INTERSTITIAL_AD_UNIT_ID
 
+    // Lives as long as the app (this class is a Hilt singleton) - used only to let the
+    // interstitial's own callbacks (onAdDismissed/onAdFailed) kick off the next
+    // preload without needing a caller-supplied scope for that specific hand-off.
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+
     private var interstitialAd: InterstitialAd? = null
     private var isLoadingInterstitial = false
 
-    fun loadBannerAd(adView: AdView) {
+    /** Suspends until UMP consent has been gathered (or the check failed/wasn't
+     * required) before actually requesting the ad - see [AdConsentManager]. */
+    suspend fun loadBannerAd(adView: AdView) {
+        consentManager.awaitReady()
         adView.adUnitId = bannerAdUnitId
         adView.loadAd(AdRequest.Builder().build())
     }
@@ -44,11 +59,13 @@ class AdManager @Inject constructor(@ApplicationContext private val context: Con
      * Shows a preloaded interstitial if one is ready, otherwise skips straight to
      * [onDismissed] - callers must never block navigation on ad availability. Always
      * kicks off loading the next interstitial so the one after is more likely ready.
+     * Synchronous (not gated on consent) since it only ever acts on whatever
+     * [preloadInterstitial] already finished loading - there's nothing to await here.
      */
     fun showInterstitial(activity: Activity, onDismissed: () -> Unit) {
         val ad = interstitialAd
         if (ad == null) {
-            preloadInterstitial()
+            scope.launch { preloadInterstitial() }
             onDismissed()
             return
         }
@@ -56,13 +73,13 @@ class AdManager @Inject constructor(@ApplicationContext private val context: Con
         ad.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdDismissedFullScreenContent() {
                 interstitialAd = null
-                preloadInterstitial()
+                scope.launch { preloadInterstitial() }
                 onDismissed()
             }
 
             override fun onAdFailedToShowFullScreenContent(adError: AdError) {
                 interstitialAd = null
-                preloadInterstitial()
+                scope.launch { preloadInterstitial() }
                 onDismissed()
             }
         }
@@ -71,8 +88,9 @@ class AdManager @Inject constructor(@ApplicationContext private val context: Con
 
     /** Call once, early (e.g. app start or first screen that might show one), so an
      * interstitial is likely already loaded by the time [showInterstitial] is called. */
-    fun preloadInterstitial() {
+    suspend fun preloadInterstitial() {
         if (isLoadingInterstitial || interstitialAd != null) return
+        consentManager.awaitReady()
         isLoadingInterstitial = true
         InterstitialAd.load(
             context,

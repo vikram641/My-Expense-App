@@ -38,7 +38,7 @@ class ExpanseDetailFragment : BaseFragment<FragmentExpanseDetailBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adManager.loadBannerAd(binding.adViewExpenseDetail)
+        lifecycleScope.launch { adManager.loadBannerAd(binding.adViewExpenseDetail) }
 
         expenseId = arguments?.getString("expenseId")
         expenseId?.let { viewModel.getExpenseDetail(it) }

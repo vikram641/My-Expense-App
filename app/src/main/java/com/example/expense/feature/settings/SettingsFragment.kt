@@ -98,7 +98,7 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>() {
 
         settingsViewModel.getUserProfile()
         // Preload so it's more likely ready by the time Export Data / SIP Calculator is tapped.
-        adManager.preloadInterstitial()
+        lifecycleScope.launch { adManager.preloadInterstitial() }
 
         binding.profileCard.setOnClickListener {
             findNavController().navigate(R.id.action_dashboardFragment_to_editProfileFragment)

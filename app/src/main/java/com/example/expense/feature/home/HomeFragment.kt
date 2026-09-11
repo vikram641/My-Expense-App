@@ -75,7 +75,7 @@ class HomeFragment : Fragment() {
         val name  = arguments?.getString("name")
         val email = arguments?.getString("email")
 
-        adManager.loadBannerAd(b.adViewHome)
+        lifecycleScope.launch { adManager.loadBannerAd(b.adViewHome) }
 
         b.avatar.setOnClickListener {
             findNavController().navigate(R.id.action_dashboardFragment_to_editProfileFragment)

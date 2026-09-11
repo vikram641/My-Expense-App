@@ -16,6 +16,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.navigation.fragment.NavHostFragment
+import com.example.expense.core.ads.AdConsentManager
 import com.example.expense.core.util.OnboardingPrefs
 import com.example.expense.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,6 +26,9 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var onboardingPrefs: OnboardingPrefs
+
+    @Inject
+    lateinit var adConsentManager: AdConsentManager
 
     private lateinit var b: ActivityMainBinding
 
@@ -48,6 +52,11 @@ class MainActivity : AppCompatActivity() {
 
         b = ActivityMainBinding.inflate(layoutInflater)
         setContentView(b.root)
+
+        // As early as possible so it's likely resolved before the first fragment
+        // that loads an ad (Home) appears - AdManager awaits this before requesting
+        // any ad either way, so a slow/failed check never blocks ads forever.
+        adConsentManager.requestConsent(this)
 
         // activity_main.xml has no static app:navGraph - building and assigning the graph
         // here, before it's ever set on the NavController, means splashFragment2 is never
