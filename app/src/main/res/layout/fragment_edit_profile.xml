@@ -295,12 +295,13 @@
     </LinearLayout>
 </ScrollView>
 
-    <!-- AdMob banner -->
-    <com.google.android.gms.ads.AdView
+    <!-- AdMob banner - plain FrameLayout placeholder, not an <AdView> tag; see
+         fragment_home.xml's adViewHome for why (code-only config avoids the SDK's
+         test-device "attribute missing" diagnostic creative). -->
+    <FrameLayout
         android:id="@+id/adViewProfile"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:adSize="BANNER"
+        android:layout_height="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>

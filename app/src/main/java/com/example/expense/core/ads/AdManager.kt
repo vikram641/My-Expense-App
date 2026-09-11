@@ -2,6 +2,7 @@ package com.example.expense.core.ads
 
 import android.app.Activity
 import android.content.Context
+import android.view.ViewGroup
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
@@ -36,11 +37,11 @@ private const val REAL_INTERSTITIAL_AD_UNIT_ID = "ca-app-pub-7178541936408370/21
  * safeguard here. A real interstitial (GoMechanic) served and was shown as a result.
  * Keep this `false` for all local/personal-device testing, regardless of build type.
  *
- * Flipped to `true` 2026-09-11 for the versionCode 8 release built for the Play
- * Console Closed testing - Alpha track upload. If you ever pull this exact build
- * back down and install it on a personal device to test something else, flip this
- * back to `false` first and rebuild - do not browse a personal device on a
- * true-flagged build.
+ * Flipped to `true` 2026-09-12 for the versionCode 9 release build (fixes the
+ * XML-declared-AdView bug that showed a diagnostic error box instead of a real ad -
+ * see AdMob integration memory). If you ever pull this exact build back down and
+ * install it on a personal device to test something else, flip this back to `false`
+ * first and rebuild - do not browse a personal device on a true-flagged build.
  */
 private const val USE_REAL_AD_UNITS = true
 
@@ -67,18 +68,29 @@ class AdManager @Inject constructor(
     /** Suspends until UMP consent has been gathered (or the check failed/wasn't
      * required) before actually requesting the ad - see [AdConsentManager].
      *
-     * Sets both adSize and adUnitId here in code (even though the layout also
-     * declares `app:adSize`) - setting adUnitId via code *after* XML has already
-     * set adSize does not reliably re-initialize the SDK's internal ad-loader client
-     * in play-services-ads 23.6.0, and loadAd() then throws
-     * "The ad size and ad unit ID must be set before loadAd is called" even though
-     * both were technically set at different times. Setting both together,
-     * immediately before loadAd(), avoids the ordering issue entirely. */
-    suspend fun loadBannerAd(adView: AdView) {
+     * Takes a plain placeholder [container] (a `FrameLayout` in the XML, not an
+     * `<AdView>` tag) and constructs the `AdView` itself, purely in code, via
+     * `AdView(context)`. This is deliberate: an `<AdView>` declared in XML is built
+     * through the SDK's `AdView(Context, AttributeSet)` constructor, which validates
+     * *both* `adSize` and `adUnitId` as of play-services-ads 23.6.0 regardless of
+     * what gets set programmatically afterward - since our ad unit ID must be chosen
+     * at runtime (real vs. test, see [USE_REAL_AD_UNITS]), it can never be present in
+     * XML, so that constructor path always flags one of the two as "missing" and
+     * (on a registered test device) renders that diagnostic text as the ad creature
+     * itself instead of a real ad. Constructing the `AdView` with the plain
+     * `AdView(context)` constructor and setting both properties before adding it to
+     * the container avoids that XML-attribute validation entirely - this is Google's
+     * own documented pattern for runtime-determined ad units. Returns the created
+     * `AdView` so the caller can drive its resume/pause/destroy lifecycle. */
+    suspend fun loadBannerAd(container: ViewGroup): AdView {
         consentManager.awaitReady()
+        val adView = AdView(container.context)
         adView.setAdSize(AdSize.BANNER)
         adView.adUnitId = bannerAdUnitId
+        container.removeAllViews()
+        container.addView(adView)
         adView.loadAd(AdRequest.Builder().build())
+        return adView
     }
 
     /**

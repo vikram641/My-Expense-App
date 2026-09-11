@@ -30,6 +30,8 @@ class ExpanseDetailFragment : BaseFragment<FragmentExpanseDetailBinding>() {
     @Inject
     lateinit var adManager: AdManager
 
+    private var bannerAd: com.google.android.gms.ads.AdView? = null
+
     override fun inflateBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
@@ -38,7 +40,10 @@ class ExpanseDetailFragment : BaseFragment<FragmentExpanseDetailBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        lifecycleScope.launch { adManager.loadBannerAd(binding.adViewExpenseDetail) }
+        // See HomeFragment's onViewCreated for why this must be viewLifecycleOwner's
+        // scope, not the fragment's: otherwise a pending consent-check suspension can
+        // resume after onDestroyView() already called .destroy() on this AdView.
+        viewLifecycleOwner.lifecycleScope.launch { bannerAd = adManager.loadBannerAd(binding.adViewExpenseDetail) }
 
         expenseId = arguments?.getString("expenseId")
         expenseId?.let { viewModel.getExpenseDetail(it) }
@@ -70,16 +75,17 @@ class ExpanseDetailFragment : BaseFragment<FragmentExpanseDetailBinding>() {
         super.onResume()
         // Re-fetch on return from the edit screen so changes are reflected.
         expenseId?.let { viewModel.getExpenseDetail(it) }
-        binding.adViewExpenseDetail.resume()
+        bannerAd?.resume()
     }
 
     override fun onPause() {
-        binding.adViewExpenseDetail.pause()
+        bannerAd?.pause()
         super.onPause()
     }
 
     override fun onDestroyView() {
-        binding.adViewExpenseDetail.destroy()
+        bannerAd?.destroy()
+        bannerAd = null
         super.onDestroyView()
     }
 

@@ -36,6 +36,8 @@ class EditProfileFragment : BaseFragment<FragmentEditProfileBinding>() {
     @Inject
     lateinit var adManager: AdManager
 
+    private var bannerAd: com.google.android.gms.ads.AdView? = null
+
     override fun inflateBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
@@ -44,7 +46,10 @@ class EditProfileFragment : BaseFragment<FragmentEditProfileBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        lifecycleScope.launch { adManager.loadBannerAd(binding.adViewProfile) }
+        // See HomeFragment's onViewCreated for why this must be viewLifecycleOwner's
+        // scope, not the fragment's: otherwise a pending consent-check suspension can
+        // resume after onDestroyView() already called .destroy() on this AdView.
+        viewLifecycleOwner.lifecycleScope.launch { bannerAd = adManager.loadBannerAd(binding.adViewProfile) }
 
         val currencyAdapter = ArrayAdapter(
             requireContext(),
@@ -138,16 +143,17 @@ class EditProfileFragment : BaseFragment<FragmentEditProfileBinding>() {
 
     override fun onResume() {
         super.onResume()
-        binding.adViewProfile.resume()
+        bannerAd?.resume()
     }
 
     override fun onPause() {
-        binding.adViewProfile.pause()
+        bannerAd?.pause()
         super.onPause()
     }
 
     override fun onDestroyView() {
-        binding.adViewProfile.destroy()
+        bannerAd?.destroy()
+        bannerAd = null
         super.onDestroyView()
     }
 

@@ -54,6 +54,8 @@ class HomeFragment : Fragment() {
     @Inject
     lateinit var adManager: AdManager
 
+    private var bannerAd: com.google.android.gms.ads.AdView? = null
+
     private lateinit var legendAdapter: LegendAdapter
 
 
@@ -75,7 +77,13 @@ class HomeFragment : Fragment() {
         val name  = arguments?.getString("name")
         val email = arguments?.getString("email")
 
-        lifecycleScope.launch { adManager.loadBannerAd(b.adViewHome) }
+        // Tied to the view's lifecycle, not the fragment's: loadBannerAd() suspends on
+        // a real UMP consent network round-trip, and if the view is destroyed while
+        // that's pending, using the fragment-level lifecycleScope would let this resume
+        // afterward and call setAdSize/adUnitId/loadAd on an already-.destroy()'d
+        // AdView - which is what produced the "Required XML attribute adUnitId was
+        // missing" SDK error overlay a real tester hit (see onDestroyView below).
+        viewLifecycleOwner.lifecycleScope.launch { bannerAd = adManager.loadBannerAd(b.adViewHome) }
 
         b.avatar.setOnClickListener {
             findNavController().navigate(R.id.action_dashboardFragment_to_editProfileFragment)
@@ -173,16 +181,17 @@ class HomeFragment : Fragment() {
         super.onResume()
         refreshAvatar()
         homeViewModel.checkNetwork()
-        b.adViewHome.resume()
+        bannerAd?.resume()
     }
 
     override fun onPause() {
-        b.adViewHome.pause()
+        bannerAd?.pause()
         super.onPause()
     }
 
     override fun onDestroyView() {
-        b.adViewHome.destroy()
+        bannerAd?.destroy()
+        bannerAd = null
         super.onDestroyView()
     }
 

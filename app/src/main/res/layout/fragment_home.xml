@@ -554,14 +554,23 @@
 
             <!-- AdMob banner - bottom margin clears DashboardFragment's 70dp
                  bottomNav, which is a sibling drawn on top of this whole fragment's
-                 container (see fragment_dashboard.xml), not something in this layout. -->
-            <com.google.android.gms.ads.AdView
+                 container (see fragment_dashboard.xml), not something in this layout.
+
+                 Plain FrameLayout placeholder, NOT an <AdView> tag - AdManager.loadBannerAd()
+                 constructs the real AdView itself in code (AdView(context)) and adds it here.
+                 An XML-declared <AdView> is built via the SDK's (Context, AttributeSet)
+                 constructor, which validates both adSize AND adUnitId as of
+                 play-services-ads 23.6.0 regardless of what's set programmatically after -
+                 since our ad unit ID must be chosen at runtime (real vs. test), it can never
+                 be in XML, so that path always flags one as "missing" and (on a registered
+                 test device) renders that diagnostic text as the ad itself. Fixed height
+                 reserves AdSize.BANNER's 50dp up front so nothing jumps once the ad loads. -->
+            <FrameLayout
                 android:id="@+id/adViewHome"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:layout_gravity="bottom"
-                android:layout_marginBottom="70dp"
-                app:adSize="BANNER"/>
+                android:layout_marginBottom="70dp"/>
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
