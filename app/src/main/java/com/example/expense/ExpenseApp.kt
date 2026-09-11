@@ -48,15 +48,19 @@ class ExpenseApp : Application(), Configuration.Provider {
 //        SyncWorker.enqueueOneTime(this)
 
         MobileAds.initialize(this) { /* init status callback, safe to ignore */ }
-        if (BuildConfig.DEBUG) {
-            // Registers the OnePlus Nord dev device this app was verified on
-            // (2026-09-11) as a test device. A different physical device will log its
-            // own hashed ID on first run ("Use RequestConfiguration.Builder()...") -
-            // add it here too rather than replacing this one.
-            val config = RequestConfiguration.Builder()
-                .setTestDeviceIds(listOf("5ECA94DDBA24462E82FE5C3DB1B8B82A"))
-                .build()
-            MobileAds.setRequestConfiguration(config)
-        }
+        // Registers the dev/test devices this app is verified on as AdMob test
+        // devices - applies in BOTH debug and release builds (not gated on
+        // BuildConfig.DEBUG) specifically so that if a developer ever sideloads a
+        // release build onto one of these physical devices, real ad unit IDs still
+        // safely resolve to clearly-labeled test ads instead of real paid ads -
+        // self-viewing (let alone clicking) real ads is invalid traffic that can get
+        // an AdMob account suspended. This has zero effect on real end users' devices;
+        // only the hashed IDs listed below ever get test ads. Safe to leave in
+        // permanently - add a new device's ID here (logged on first run, see
+        // "Use RequestConfiguration.Builder()...") rather than replacing this one.
+        val config = RequestConfiguration.Builder()
+            .setTestDeviceIds(listOf("5ECA94DDBA24462E82FE5C3DB1B8B82A")) // OnePlus Nord dev device, verified 2026-09-11
+            .build()
+        MobileAds.setRequestConfiguration(config)
     }
 }
