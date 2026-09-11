@@ -14,21 +14,23 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
-/**
- * Real ad unit IDs haven't been created in the AdMob console yet (only the app entry
- * has) - these are Google's public test units. Replace with real ones from AdMob
- * before shipping a release build; never ship these test IDs in `release`.
- */
 private const val TEST_BANNER_AD_UNIT_ID = "ca-app-pub-3940256099942544/6300978111"
 private const val TEST_INTERSTITIAL_AD_UNIT_ID = "ca-app-pub-3940256099942544/1033173712"
+
+// Real ad units, created in the AdMob console 2026-09-11 - each is shared across
+// multiple placements (see docs/GOOGLE_ADS_ADMOB_INTEGRATION.md) rather than one
+// unit per screen, since this app has no need for per-placement reporting yet.
+private const val REAL_BANNER_AD_UNIT_ID = "ca-app-pub-7178541936408370/7875983914" // "Shared Banner (Home, Expense Detail, Profile)"
+private const val REAL_INTERSTITIAL_AD_UNIT_ID = "ca-app-pub-7178541936408370/2157482326" // "Shared Interstitial (Export Data, SIP Calculator)"
 
 @Singleton
 class AdManager @Inject constructor(@ApplicationContext private val context: Context) {
 
-    // TODO: replace both with real ad unit IDs from the AdMob console before release.
-    private val bannerAdUnitId: String = if (BuildConfig.DEBUG) TEST_BANNER_AD_UNIT_ID else TEST_BANNER_AD_UNIT_ID
+    // Test IDs in debug builds only - never test against real ad units on a personal
+    // device (self-serves count as invalid traffic and can get the AdMob account suspended).
+    private val bannerAdUnitId: String = if (BuildConfig.DEBUG) TEST_BANNER_AD_UNIT_ID else REAL_BANNER_AD_UNIT_ID
     private val interstitialAdUnitId: String =
-        if (BuildConfig.DEBUG) TEST_INTERSTITIAL_AD_UNIT_ID else TEST_INTERSTITIAL_AD_UNIT_ID
+        if (BuildConfig.DEBUG) TEST_INTERSTITIAL_AD_UNIT_ID else REAL_INTERSTITIAL_AD_UNIT_ID
 
     private var interstitialAd: InterstitialAd? = null
     private var isLoadingInterstitial = false
