@@ -2,9 +2,12 @@ package com.example.expense.feature.settings
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,6 +33,7 @@ import com.example.expense.sync.SyncWorker
 import com.example.expense.ui.dialog.ExportDataDialog
 import com.example.expense.ui.dialog.ExportRange
 import com.example.expense.ui.dialog.LogoutConfirmDialog
+import com.example.expense.feature.voicequickadd.FloatingBubbleService
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -57,6 +61,21 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>() {
         ActivityResultContracts.RequestPermission()
     ) { granted ->
         if (granted) showInterstitialThen { openExportDialog() } else showToast("Storage permission is needed to export")
+    }
+
+    // Set true only while we're programmatically flipping switchVoiceWidget back, so that
+    // doesn't re-enter setOnCheckedChangeListener below.
+    private var suppressVoiceBubbleToggle = false
+
+    private val requestRecordAudioPermission = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        if (granted) {
+            enableFloatingBubble()
+        } else {
+            showToast("Microphone permission is needed for voice quick-add")
+            revertVoiceBubbleSwitch()
+        }
     }
 
     override fun inflateBinding(
@@ -163,6 +182,41 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>() {
                 .apply()
         }
 
+        binding.switchVoiceWidget.isChecked = requireContext()
+            .getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+            .getBoolean(FloatingBubbleService.KEY_ENABLED, false)
+
+        binding.switchVoiceWidget.setOnCheckedChangeListener { _, isChecked ->
+            if (suppressVoiceBubbleToggle) return@setOnCheckedChangeListener
+
+            if (isChecked) {
+                if (!Settings.canDrawOverlays(requireContext())) {
+                    showToast("Allow \"Display over other apps\" for FixMoney, then turn this back on")
+                    startActivity(
+                        Intent(
+                            Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                            Uri.parse("package:${requireContext().packageName}")
+                        )
+                    )
+                    revertVoiceBubbleSwitch()
+                    return@setOnCheckedChangeListener
+                }
+                if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.RECORD_AUDIO)
+                    != PackageManager.PERMISSION_GRANTED
+                ) {
+                    requestRecordAudioPermission.launch(Manifest.permission.RECORD_AUDIO)
+                    return@setOnCheckedChangeListener
+                }
+                enableFloatingBubble()
+            } else {
+                requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+                    .edit()
+                    .putBoolean(FloatingBubbleService.KEY_ENABLED, false)
+                    .apply()
+                FloatingBubbleService.stop(requireContext())
+            }
+        }
+
 
 
 //        setupRecycler()
@@ -234,6 +288,20 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>() {
                 }
             }
         }
+    }
+
+    private fun enableFloatingBubble() {
+        requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+            .edit()
+            .putBoolean(FloatingBubbleService.KEY_ENABLED, true)
+            .apply()
+        FloatingBubbleService.start(requireContext())
+    }
+
+    private fun revertVoiceBubbleSwitch() {
+        suppressVoiceBubbleToggle = true
+        binding.switchVoiceWidget.isChecked = false
+        suppressVoiceBubbleToggle = false
     }
 
     /** Shows the preloaded interstitial (if ready) before running [action]; if none is

@@ -29,6 +29,20 @@
         android:name="android.hardware.camera.any"
         android:required="false" />
 
+    <!-- Floating Voice Quick-Add: a persistent draggable bubble (like Grammarly's) that
+         listens on tap and adds an expense from what you say. -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+
+    <!-- Makes the on-device speech recognizer visible to this app under Android 11+
+         package-visibility rules (SpeechRecognizer binds to it directly). -->
+    <queries>
+        <intent>
+            <action android:name="android.speech.RecognitionService" />
+        </intent>
+    </queries>
 
     <application
         android:name=".ExpenseApp"
@@ -113,6 +127,17 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
+        <!-- Floating Voice Quick-Add bubble: a foreground service so it can keep its
+             overlay window and mic access while the app itself isn't in the foreground. -->
+        <service
+            android:name=".feature.voicequickadd.FloatingBubbleService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Floating voice button to add an expense by speaking" />
+        </service>
 
     </application>
 

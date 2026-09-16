@@ -59,12 +59,14 @@
             <TextView
                 android:id="@+id/tvName"
                 android:layout_width="0dp"
-                android:layout_marginLeft="10dp"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+
                 android:text="Vikram Singh"
                 android:textColor="@color/text_primary"
                 android:textSize="16sp"
                 android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/imgArrow"
                 app:layout_constraintStart_toEndOf="@+id/tvAvatar"
                 app:layout_constraintTop_toTopOf="@id/tvAvatar" />
@@ -74,6 +76,7 @@
                 android:id="@+id/tvEmail"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:text="vikram@example.com"
                 android:textColor="@color/text_hint"
                 android:textSize="13sp"
@@ -173,6 +176,49 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/iconAlert"/>
 
+            <!-- Voice Quick-Add Widget -->
+            <TextView
+                android:id="@+id/iconVoiceWidget"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_circle"
+                android:gravity="center"
+                android:text="🎙️"
+                android:layout_marginTop="20dp"
+                app:layout_constraintTop_toBottomOf="@id/iconAlert"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <TextView
+                android:id="@+id/tvVoiceWidget"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Floating Voice Quick-Add"
+                android:textColor="@color/text_primary"
+                android:layout_marginStart="12dp"
+                app:layout_constraintStart_toEndOf="@id/iconVoiceWidget"
+                app:layout_constraintEnd_toStartOf="@id/switchVoiceWidget"
+                app:layout_constraintTop_toTopOf="@id/iconVoiceWidget"/>
+
+            <TextView
+                android:id="@+id/tvVoiceWidgetSub"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="A floating bubble anywhere on screen — tap and speak to add an expense"
+                android:textColor="@color/text_hint"
+                android:textSize="11sp"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="2dp"
+                app:layout_constraintStart_toEndOf="@id/iconVoiceWidget"
+                app:layout_constraintEnd_toStartOf="@id/switchVoiceWidget"
+                app:layout_constraintTop_toBottomOf="@id/tvVoiceWidget"/>
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switchVoiceWidget"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/iconVoiceWidget"/>
+
             <!-- Currency -->
             <TextView
                 android:id="@+id/iconCurrency"
@@ -182,7 +228,7 @@
                 android:gravity="center"
                 android:text="💱"
                 android:layout_marginTop="20dp"
-                app:layout_constraintTop_toBottomOf="@id/iconAlert"
+                app:layout_constraintTop_toBottomOf="@id/iconVoiceWidget"
                 app:layout_constraintStart_toStartOf="parent"/>
 
             <TextView
@@ -304,6 +350,7 @@
         android:id="@+id/btnLogout"
         android:layout_width="0dp"
         android:layout_height="50dp"
+        android:visibility="gone"
         android:text="Logout"
         android:textColor="#FF3B30"
         android:backgroundTint="@color/bg_card"

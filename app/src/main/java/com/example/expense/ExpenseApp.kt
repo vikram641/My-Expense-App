@@ -1,10 +1,15 @@
 package com.example.expense
 
+import android.Manifest
 import android.app.Application
 import android.content.Context
+import android.content.pm.PackageManager
+import android.provider.Settings
+import androidx.core.content.ContextCompat
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import com.example.expense.core.util.SessionCacheManager
+import com.example.expense.feature.voicequickadd.FloatingBubbleService
 import com.example.expense.sync.SyncWorker
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.RequestConfiguration
@@ -69,5 +74,29 @@ class ExpenseApp : Application(), Configuration.Provider {
             )
             .build()
         MobileAds.setRequestConfiguration(config)
+
+        restartVoiceBubbleIfEnabled()
+    }
+
+    /**
+     * The floating voice bubble only starts from Settings' own toggle switching ON -
+     * a plain launch/relaunch of the app (after a force-stop, a crash, or the OS
+     * killing the service) doesn't rerun that listener, so the bubble would silently
+     * stay gone even though the toggle still shows on and the pref still says
+     * enabled. Re-sync actual service state with the stored preference on every
+     * process start instead - safe to call even if it's already running
+     * (onStartCommand on an already-started service is a no-op restart).
+     */
+    private fun restartVoiceBubbleIfEnabled() {
+        val enabled = getSharedPreferences("app_prefs", MODE_PRIVATE)
+            .getBoolean(FloatingBubbleService.KEY_ENABLED, false)
+        if (!enabled) return
+
+        val hasOverlay = Settings.canDrawOverlays(this)
+        val hasMic = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) ==
+            PackageManager.PERMISSION_GRANTED
+        if (hasOverlay && hasMic) {
+            FloatingBubbleService.start(this)
+        }
     }
 }
